@@ -41,7 +41,7 @@ public class MusikPlayer {
 	                        audioClip.start();
 	                        
 	                        while (duration > 0) {
-	                            // wait for the playback completes
+	                            
 	                            try {
 	                                Thread.sleep(1000);
 	                            } catch (InterruptedException ex) {
