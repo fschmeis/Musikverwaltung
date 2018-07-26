@@ -11,11 +11,13 @@ import java.io.FileInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
@@ -28,6 +30,12 @@ public class MusikGUI extends JFrame {
 
 	JButton btnPlay = new JButton();
 	JButton btnStop = new JButton();
+	JButton btnNewPlaylist = new JButton("Neue Playlist");
+	
+	String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+	
+	JTable tblPlaylist;
+	JComboBox playlist = new JComboBox(petStrings);
 	
 	//Menüleiste
 	JMenuBar bar;
@@ -38,6 +46,8 @@ public class MusikGUI extends JFrame {
 	JMenuItem vModusItem;
 	
 	MusikPlayer player = new MusikPlayer();
+	
+	boolean play = false;
 	
 	//Konstruktor
 	public MusikGUI() {
@@ -82,7 +92,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnPlay);
 		btnPlay.setBounds(50, 200, 70, 70);
-		btnPlay.addActionListener(e->player.musikAbspielen());
+		btnPlay.addActionListener(e->abspielen());
 		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
@@ -95,7 +105,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnStop);
 		btnStop.setBounds(190, 200, 70, 70);
-		btnStop.addActionListener(e->player.musikStoppen());
+		btnStop.addActionListener(e->stoppen());
 		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
@@ -105,6 +115,11 @@ public class MusikGUI extends JFrame {
 		} catch (Exception ex) {
 		    System.out.println(ex);
 		}
+		
+		pBenutzermod.add(btnNewPlaylist);
+		btnNewPlaylist.setBounds(330, 200, 150, 30);
+		btnNewPlaylist.addActionListener(e->stoppen());
+		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 	}
 	
 	public void bModusAuf() {
@@ -115,5 +130,44 @@ public class MusikGUI extends JFrame {
 	public void vModusAuf() {
 		pBenutzermod.setVisible(false);
 		pVerwaltungsmod.setVisible(true);
+	}
+	
+	public void abspielen() {
+		
+		if(play == false) {
+			try {
+				Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
+				btnPlay.setIcon(new ImageIcon(img));
+				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+			} catch (Exception ex) {
+			    System.out.println(ex);
+			}
+			
+			play = true;
+			
+			player.musikAbspielen();
+		}
+		else {
+			stoppen();
+		}
+		
+	}
+	
+	public void stoppen() {
+		
+		if(play == true) {
+			try {
+				Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+				btnPlay.setIcon(new ImageIcon(img));
+				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+			} catch (Exception ex) {
+			    System.out.println(ex);
+			}
+			
+			play = false;
+			
+			player.musikStoppen();
+		}
+		
 	}
 }

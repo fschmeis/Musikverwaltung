@@ -1,7 +1,12 @@
 package musikverwaltung;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -11,25 +16,32 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+
 public class MusikPlayer {
 	
 	Clip audioClip;
+	String audioFilePath;
+	File audioFile;
+	AudioInputStream audioStream;
+	AudioFormat audioFormat;
 	
 	public void musikAbspielen() {
 		
 			new Thread(new Runnable() {
 	            public void run() {
 	                try {
-	                	String audioFilePath = "music/test.wav";
+	                	audioFilePath = "music/test.wav";
 	            		
-	            		File audioFile = new File(audioFilePath);
+	            		audioFile = new File(audioFilePath);
 	            		 
 	                    try {        	
-	                        AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+	                        audioStream = AudioSystem.getAudioInputStream(audioFile);
 	             
-	                        AudioFormat format = audioStream.getFormat();
+	                        audioFormat = audioStream.getFormat();
+	                        
+	                        System.out.println(audioFormat.properties());
 	             
-	                        DataLine.Info info = new DataLine.Info(Clip.class, format);
+	                        DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
 	             
 	                        audioClip = (Clip) AudioSystem.getLine(info);
 	             
@@ -81,4 +93,26 @@ public class MusikPlayer {
 		}
 		
 	}
+	
+	
+//	public void savePlaylist() throws IOException{
+//	    
+//		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+//		String filename = "playlist.dat";
+//		File f = new File(filename);
+//
+//		try{
+//			ObjectOutput ObjOut = new ObjectOutputStream(new FileOutputStream(f));
+//
+//			ObjOut.writeObject("test");
+//			ObjOut.close();
+//
+//			System.out.println("Serializing an Object Creation completed successfully.");
+//	    }
+//
+//		catch(IOException e){
+//			System.out.println(e.getMessage());
+//	    }
+//
+//	}
 }
