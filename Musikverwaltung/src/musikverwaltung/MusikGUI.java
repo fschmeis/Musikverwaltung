@@ -48,7 +48,7 @@ public class MusikGUI extends JFrame {
 		//Beenden bei Klick auf rotes Kreuz
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
-		//Menu
+		//Menü
 		bar = new JMenuBar();
 		dateimenu = new JMenu("Datei");
 		modusmenu = new JMenu("Modus");
