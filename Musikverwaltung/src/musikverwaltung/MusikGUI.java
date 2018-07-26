@@ -1,122 +1,119 @@
 package musikverwaltung;
 
-import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.GridLayout;
-import java.io.File;
-import java.io.IOException;
+import java.awt.Image;
+import java.io.FileInputStream;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 public class MusikGUI extends JFrame {
 	
 	//Komponenten
-	Container cp;			//contentPane
-	JPanel p1;
-	
-	JPanel p2;
-	JButton btnPlay = new JButton("Play");
+	Container cp;						//contentPane
+	JPanel pBenutzermod;				//BenutzermodusPanel
+	JPanel pVerwaltungsmod;				//VerwaltungsmodusPanel
+
+	JButton btnPlay = new JButton();
+	JButton btnStop = new JButton();
 	
 	//Menüleiste
 	JMenuBar bar;
 	JMenu dateimenu;
-	JMenuItem beendenitem;
+	JMenu modusmenu;
+	JMenuItem beendenItem;
+	JMenuItem bModusItem;
+	JMenuItem vModusItem;
+	
+	MusikPlayer player = new MusikPlayer();
 	
 	//Konstruktor
 	public MusikGUI() {
 		this.setTitle("Musikverwaltung");
-		this.setLocation(300, 400);
-		this.setSize(600, 300);
+		this.setLocation(100, 200);
+		this.setSize(1200, 700);
+		
+		//Beenden bei Klick auf rotes Kreuz
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//Menü
 		bar = new JMenuBar();
 		dateimenu = new JMenu("Datei");
-		beendenitem = new JMenuItem("Beenden");
-		beendenitem.addActionListener(e->{System.exit(0);});
+		modusmenu = new JMenu("Modus");
+		beendenItem = new JMenuItem("Beenden");
+		beendenItem.addActionListener(e->{System.exit(0);});
+		bModusItem = new JMenuItem("Benutzermodus");
+		bModusItem.addActionListener(e->bModusAuf());
+		vModusItem = new JMenuItem("Verwaltungsmodus");
+		vModusItem.addActionListener(e->vModusAuf());
 		
-		dateimenu.add(beendenitem);
+		dateimenu.add(beendenItem);
+		modusmenu.add(bModusItem);
+		modusmenu.add(vModusItem);
 		bar.add(dateimenu);
+		bar.add(modusmenu);
 		this.setJMenuBar(bar);
 		
 		//contentPane
 		cp = this.getContentPane();
-		cp.setLayout(new GridLayout(2,1));
-		p1 = new JPanel();
-		p1.setLayout(new BorderLayout());
-		cp.add(p1);
+		cp.setLayout(new CardLayout());
+		pBenutzermod = new JPanel();
+		pBenutzermod.setLayout(null);
+		pBenutzermod.setBackground(Color.YELLOW);
+		cp.add(pBenutzermod);
 		
-		p2 = new JPanel();
-		p2.setLayout(null);
-		p2.setBackground(Color.ORANGE);
+		pVerwaltungsmod = new JPanel();
+		pVerwaltungsmod.setLayout(null);
+		pVerwaltungsmod.setVisible(false);
+		pVerwaltungsmod.setBackground(Color.CYAN);
+		cp.add(pVerwaltungsmod);
 		
-		p2.add(btnPlay);
-		btnPlay.setBounds(350, 50, 150, 20);
+		pBenutzermod.add(btnPlay);
+		btnPlay.setBounds(50, 200, 70, 70);
+		btnPlay.addActionListener(e->player.musikAbspielen());
+		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
-		cp.add(p2);
+		try {
+			Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+		    btnPlay.setIcon(new ImageIcon(img));
+		    btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
 		
-		btnPlay.addActionListener(e->musikAbspielen());
+		pBenutzermod.add(btnStop);
+		btnStop.setBounds(190, 200, 70, 70);
+		btnStop.addActionListener(e->player.musikStoppen());
+		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		try {
+			Image img = ImageIO.read(new FileInputStream("icons/stop.png"));
+			btnStop.setIcon(new ImageIcon(img));
+			btnStop.setHorizontalTextPosition(SwingConstants.CENTER);
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
 	}
 	
-	public void musikAbspielen() {
-		
-		String audioFilePath = "test.wav";
-		
-		File audioFile = new File(audioFilePath);
-		 
-        try {        	
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
- 
-            AudioFormat format = audioStream.getFormat();
- 
-            DataLine.Info info = new DataLine.Info(Clip.class, format);
- 
-            Clip audioClip = (Clip) AudioSystem.getLine(info);
- 
-            audioClip.open(audioStream);
-            
-            long duration = audioClip.getMicrosecondLength();
-            duration = duration / 1_000_000;
-             
-            audioClip.start();
-            
-            while (duration > 0) {
-                // wait for the playback completes
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                
-                duration--;
-            }
-             
-            audioClip.close();
-             
-        } catch (UnsupportedAudioFileException ex) {
-            System.out.println("The specified audio file is not supported.");
-            ex.printStackTrace();
-        } catch (LineUnavailableException ex) {
-            System.out.println("Audio line for playing back is unavailable.");
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            System.out.println("Error playing the audio file.");
-            ex.printStackTrace();
-        }
+	public void bModusAuf() {
+		pBenutzermod.setVisible(true);
+		pVerwaltungsmod.setVisible(false);
+	}
+	
+	public void vModusAuf() {
+		pBenutzermod.setVisible(false);
+		pVerwaltungsmod.setVisible(true);
 	}
 }
