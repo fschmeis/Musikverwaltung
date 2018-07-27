@@ -17,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
@@ -34,7 +35,15 @@ public class MusikGUI extends JFrame {
 	
 	String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
 	
-	JTable tblPlaylist;
+	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre"};
+	
+	Object[][] data = {
+		    {new Integer(1), "Leider Geil", "Deichkind", "Befeh von ganz unten", "Electronic"},
+		    {new Integer(2), "So ne Musik", "Deichkind", "Niveau Weshalb Warum", "Electronic"},
+	};
+	
+	JTable tblPlaylist = new JTable(data, columnNames);
+	JScrollPane scrollpane = new JScrollPane(tblPlaylist);
 	JComboBox playlist = new JComboBox(petStrings);
 	
 	//Menüleiste
@@ -90,8 +99,11 @@ public class MusikGUI extends JFrame {
 		pVerwaltungsmod.setBackground(Color.CYAN);
 		cp.add(pVerwaltungsmod);
 		
+		pBenutzermod.add(scrollpane);
+		scrollpane.setBounds(50, 200, 700, 200);
+		
 		pBenutzermod.add(btnPlay);
-		btnPlay.setBounds(50, 200, 70, 70);
+		btnPlay.setBounds(50, 500, 70, 70);
 		btnPlay.addActionListener(e->abspielen());
 		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
@@ -104,7 +116,7 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnStop);
-		btnStop.setBounds(190, 200, 70, 70);
+		btnStop.setBounds(190, 500, 70, 70);
 		btnStop.addActionListener(e->stoppen());
 		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
@@ -117,7 +129,7 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnNewPlaylist);
-		btnNewPlaylist.setBounds(330, 200, 150, 30);
+		btnNewPlaylist.setBounds(330, 500, 150, 30);
 		btnNewPlaylist.addActionListener(e->stoppen());
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 	}
