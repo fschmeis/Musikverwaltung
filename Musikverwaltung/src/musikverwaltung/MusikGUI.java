@@ -36,8 +36,6 @@ public class MusikGUI extends JFrame {
 	JButton btnStop = new JButton();
 	JButton btnNewPlaylist = new JButton("Neue Playlist");
 	
-	String[] strPlaylists = {playlist.allePlaylists()};
-	
 	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre"};
 	
 	Object[][] data = {
@@ -47,7 +45,7 @@ public class MusikGUI extends JFrame {
 	
 	JTable tblPlaylist = new JTable(data, columnNames);
 	JScrollPane scrollpane = new JScrollPane(tblPlaylist);
-	JComboBox cPlaylist = new JComboBox(strPlaylists);
+	JComboBox cPlaylist = new JComboBox(playlist.allePlaylists());
 	
 	//Menüleiste
 	JMenuBar bar;
