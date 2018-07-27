@@ -24,6 +24,9 @@ import javax.swing.WindowConstants;
 
 public class MusikGUI extends JFrame {
 	
+	MusikPlayer player = new MusikPlayer();
+	MusikPlaylist playlist = new MusikPlaylist();
+	
 	//Komponenten
 	Container cp;						//contentPane
 	JPanel pBenutzermod;				//BenutzermodusPanel
@@ -33,18 +36,18 @@ public class MusikGUI extends JFrame {
 	JButton btnStop = new JButton();
 	JButton btnNewPlaylist = new JButton("Neue Playlist");
 	
-	String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+	String[] strPlaylists = {playlist.allePlaylists()};
 	
 	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre"};
 	
 	Object[][] data = {
-		    {new Integer(1), "Leider Geil", "Deichkind", "Befeh von ganz unten", "Electronic"},
+		    {new Integer(1), "Leider Geil", "Deichkind", "Befehl von ganz unten", "Electronic"},
 		    {new Integer(2), "So ne Musik", "Deichkind", "Niveau Weshalb Warum", "Electronic"},
 	};
 	
 	JTable tblPlaylist = new JTable(data, columnNames);
 	JScrollPane scrollpane = new JScrollPane(tblPlaylist);
-	JComboBox playlist = new JComboBox(petStrings);
+	JComboBox cPlaylist = new JComboBox(strPlaylists);
 	
 	//Menüleiste
 	JMenuBar bar;
@@ -53,8 +56,6 @@ public class MusikGUI extends JFrame {
 	JMenuItem beendenItem;
 	JMenuItem bModusItem;
 	JMenuItem vModusItem;
-	
-	MusikPlayer player = new MusikPlayer();
 	
 	boolean play = false;
 	
@@ -101,6 +102,9 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(scrollpane);
 		scrollpane.setBounds(50, 200, 700, 200);
+		
+		pBenutzermod.add(cPlaylist);
+		cPlaylist.setBounds(50, 100, 200, 30);
 		
 		pBenutzermod.add(btnPlay);
 		btnPlay.setBounds(50, 500, 70, 70);
