@@ -61,6 +61,7 @@ public class MusikGUI extends JFrame {
 	JMenuItem vModusItem;
 	
 	boolean play = false;
+	boolean pause = false;
 	
 	//Konstruktor
 	public MusikGUI() {
@@ -166,20 +167,50 @@ public class MusikGUI extends JFrame {
 	public void abspielen() {
 		
 		if(play == false) {
-			try {
-				Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
-				btnPlay.setIcon(new ImageIcon(img));
-				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
-			} catch (Exception ex) {
-			    System.out.println(ex);
-			}
-			
-			play = true;
-			
-			player.musikAbspielen();
+				try {
+					Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
+					btnPlay.setIcon(new ImageIcon(img));
+					btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+				} catch (Exception ex) {
+				    System.out.println(ex);
+				}
+				
+				play = true;
+				pause = false;
+				
+				player.musikAbspielen(0L);
 		}
 		else {
-			pausieren();
+			
+			if(pause == false) {
+				try {
+					Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+					btnPlay.setIcon(new ImageIcon(img));
+					btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+				} catch (Exception ex) {
+				    System.out.println(ex);
+				}
+				
+				pause = true;
+				
+				player.musikStoppen();
+			}
+			else {
+				try {
+					Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
+					btnPlay.setIcon(new ImageIcon(img));
+					btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+				} catch (Exception ex) {
+				    System.out.println(ex);
+				}
+				
+				pause = false;
+				
+				player.musikWeiterspielen();
+			}
+			
+			
+			
 		}
 		
 	}
@@ -202,21 +233,4 @@ public class MusikGUI extends JFrame {
 		
 	}
 	
-	public void pausieren() {
-		
-		if(play == true) {
-			try {
-				Image img = ImageIO.read(new FileInputStream("icons/play.png"));
-				btnPlay.setIcon(new ImageIcon(img));
-				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
-			} catch (Exception ex) {
-			    System.out.println(ex);
-			}
-			
-			play = false;
-			
-			player.musikStoppen();
-		}
-		
-	}
 }

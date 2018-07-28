@@ -24,8 +24,9 @@ public class MusikPlayer {
 	File audioFile;
 	AudioInputStream audioStream;
 	AudioFormat audioFormat;
+	long duration;
 	
-	public void musikAbspielen() {
+	public void musikAbspielen(long dauer) {
 		
 			new Thread(new Runnable() {
 	            public void run() {
@@ -38,8 +39,6 @@ public class MusikPlayer {
 	                        audioStream = AudioSystem.getAudioInputStream(audioFile);
 	             
 	                        audioFormat = audioStream.getFormat();
-	                        
-	                        System.out.println(audioFormat.properties());
 	             
 	                        DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
 	             
@@ -47,8 +46,8 @@ public class MusikPlayer {
 	             
 	                        audioClip.open(audioStream);
 	                        
-	                        long duration = audioClip.getMicrosecondLength();
-	                        duration = duration / 1_000_000;
+	                        duration = audioClip.getMicrosecondLength();
+		                    duration = duration / 1_000_000;
 	                        
 	                        audioClip.start();
 	                        
@@ -95,14 +94,31 @@ public class MusikPlayer {
 	}
 	
 	
-	public void musikPausieren() {
-		try {
-			audioClip.wait();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
+	public void musikWeiterspielen() {
 		
+		new Thread(new Runnable() {
+            public void run() {
+                try {
+                	audioClip.start();
+            
+                	while (duration > 0) {
+                
+                		try {
+                			Thread.sleep(1000);
+                		} catch (InterruptedException ex) {
+                			ex.printStackTrace();
+                		}
+                
+                		duration--;
+                	}
+             
+                	audioClip.close();
+                }
+                catch (Exception ex) {
+                	ex.printStackTrace();
+                }
+            }
+        }).start();
 	}
 	
 	
