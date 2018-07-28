@@ -4,8 +4,10 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
@@ -17,6 +19,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -35,6 +38,8 @@ public class MusikGUI extends JFrame {
 	JButton btnPlay = new JButton();
 	JButton btnStop = new JButton();
 	JButton btnNewPlaylist = new JButton("Neue Playlist");
+	
+	JProgressBar progBar = new JProgressBar();
 	
 	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre"};
 	
@@ -59,9 +64,17 @@ public class MusikGUI extends JFrame {
 	
 	//Konstruktor
 	public MusikGUI() {
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		
 		this.setTitle("Musikverwaltung");
-		this.setLocation(100, 200);
 		this.setSize(1200, 700);
+		
+		//Mitte des Bildschirms
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+		
+		//Vollbild
+//		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		//Beenden bei Klick auf rotes Kreuz
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -105,7 +118,7 @@ public class MusikGUI extends JFrame {
 		cPlaylist.setBounds(50, 100, 200, 30);
 		
 		pBenutzermod.add(btnPlay);
-		btnPlay.setBounds(50, 500, 70, 70);
+		btnPlay.setBounds(50, 550, 38, 38);
 		btnPlay.addActionListener(e->abspielen());
 		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
@@ -118,7 +131,7 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnStop);
-		btnStop.setBounds(190, 500, 70, 70);
+		btnStop.setBounds(100, 550, 38, 38);
 		btnStop.addActionListener(e->stoppen());
 		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
@@ -131,9 +144,13 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnNewPlaylist);
-		btnNewPlaylist.setBounds(330, 500, 150, 30);
+		btnNewPlaylist.setBounds(330, 550, 150, 30);
 		btnNewPlaylist.addActionListener(e->stoppen());
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		pBenutzermod.add(progBar);
+		progBar.setBounds(50, 600, 700, 30);
+		progBar.setValue(0);
 	}
 	
 	public void bModusAuf() {
@@ -162,12 +179,30 @@ public class MusikGUI extends JFrame {
 			player.musikAbspielen();
 		}
 		else {
-			stoppen();
+			pausieren();
 		}
 		
 	}
 	
 	public void stoppen() {
+		
+		if(play == true) {
+			try {
+				Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+				btnPlay.setIcon(new ImageIcon(img));
+				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+			} catch (Exception ex) {
+			    System.out.println(ex);
+			}
+			
+			play = false;
+			
+			player.musikStoppen();
+		}
+		
+	}
+	
+	public void pausieren() {
 		
 		if(play == true) {
 			try {

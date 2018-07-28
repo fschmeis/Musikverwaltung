@@ -30,7 +30,7 @@ public class MusikPlayer {
 			new Thread(new Runnable() {
 	            public void run() {
 	                try {
-	                	audioFilePath = "music/test.wav";
+	                	audioFilePath = "music/Leider Geil.wav";
 	            		
 	            		audioFile = new File(audioFilePath);
 	            		 
@@ -87,6 +87,17 @@ public class MusikPlayer {
 	public void musikStoppen() {
 		try {
 			audioClip.stop();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void musikPausieren() {
+		try {
+			audioClip.wait();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
