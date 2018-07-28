@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -22,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
@@ -34,10 +36,21 @@ public class MusikGUI extends JFrame {
 	Container cp;						//contentPane
 	JPanel pBenutzermod;				//BenutzermodusPanel
 	JPanel pVerwaltungsmod;				//VerwaltungsmodusPanel
-
+	
+	//Menüleiste
+	JMenuBar bar;
+	JMenu dateimenu;
+	JMenu modusmenu;
+	JMenuItem beendenItem;
+	JMenuItem bModusItem;
+	JMenuItem vModusItem;
+	
+	//Benutzermodus-Komponenten
+	JLabel lblPlaylisten = new JLabel("Playlisten");
+	
 	JButton btnPlay = new JButton();
 	JButton btnStop = new JButton();
-	JButton btnNewPlaylist = new JButton("Neue Playlist");
+	JButton btnNewPlaylist = new JButton("+");
 	
 	JProgressBar progBar = new JProgressBar();
 	
@@ -49,19 +62,31 @@ public class MusikGUI extends JFrame {
 	};
 	
 	JTable tblPlaylist = new JTable(data, columnNames);
-	JScrollPane scrollpane = new JScrollPane(tblPlaylist);
-	JComboBox cPlaylist = new JComboBox(playlist.allePlaylists());
+	JScrollPane scpPlaylist = new JScrollPane(tblPlaylist);
+	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
-	//Menüleiste
-	JMenuBar bar;
-	JMenu dateimenu;
-	JMenu modusmenu;
-	JMenuItem beendenItem;
-	JMenuItem bModusItem;
-	JMenuItem vModusItem;
+	//Verwaltungsmodus-Komponenten
+	JLabel lblTitel = new JLabel("Titel");
+	JLabel lblInterpret = new JLabel("Interpret");
+	JLabel lblAlbum = new JLabel("Album");
+	JLabel lblGenre = new JLabel("Genre");
 	
+	JTextField tfTitel = new JTextField();
+	JTextField tfInterpret = new JTextField();
+	JTextField tfAlbum = new JTextField();
+	JTextField tfGenre = new JTextField();
+	
+	JButton btnAddTitel = new JButton("+");
+	JButton btnDelTitel = new JButton("-");
+	
+	JTable tblAlleTitel = new JTable(data, columnNames);
+	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
+		
+	//sonst. Variablen	
 	boolean play = false;
 	boolean pause = false;
+	
+	JLabel lblAktTitel = new JLabel(data[0][1] + " - " + data[0][2]);	//Vom Titel abhängiges Label
 	
 	//Konstruktor
 	public MusikGUI() {
@@ -101,20 +126,19 @@ public class MusikGUI extends JFrame {
 		//contentPane
 		cp = this.getContentPane();
 		cp.setLayout(new CardLayout());
+		
+		//Benutzermodus-Panel
 		pBenutzermod = new JPanel();
 		pBenutzermod.setLayout(null);
-		pBenutzermod.setBackground(Color.YELLOW);
+		pBenutzermod.setBackground(Color.DARK_GRAY);
 		cp.add(pBenutzermod);
 		
-		pVerwaltungsmod = new JPanel();
-		pVerwaltungsmod.setLayout(null);
-		pVerwaltungsmod.setVisible(false);
-		pVerwaltungsmod.setBackground(Color.CYAN);
-		cp.add(pVerwaltungsmod);
+		pBenutzermod.add(scpPlaylist);
+		scpPlaylist.setBounds(50, 200, 700, 200);
 		
-		pBenutzermod.add(scrollpane);
-		scrollpane.setBounds(50, 200, 700, 200);
-		
+		pBenutzermod.add(lblPlaylisten);
+		lblPlaylisten.setForeground(Color.WHITE);
+		lblPlaylisten.setBounds(50, 70, 200, 30);
 		pBenutzermod.add(cPlaylist);
 		cPlaylist.setBounds(50, 100, 200, 30);
 		
@@ -145,13 +169,50 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnNewPlaylist);
-		btnNewPlaylist.setBounds(330, 550, 150, 30);
+		btnNewPlaylist.setBounds(260, 100, 150, 30);
 		btnNewPlaylist.addActionListener(e->stoppen());
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(progBar);
 		progBar.setBounds(50, 600, 700, 30);
-		progBar.setValue(0);
+		progBar.setValue(15);
+			
+		pBenutzermod.add(lblAktTitel);
+		lblAktTitel.setForeground(Color.WHITE);
+		lblAktTitel.setBounds(150, 550, 200, 38);
+		
+		//Verwaltungsmodus-Panel
+		pVerwaltungsmod = new JPanel();
+		pVerwaltungsmod.setLayout(null);
+		pVerwaltungsmod.setVisible(false);
+		pVerwaltungsmod.setBackground(Color.GRAY);
+		cp.add(pVerwaltungsmod);
+		
+		pVerwaltungsmod.add(btnAddTitel);
+		btnAddTitel.setBounds(780, 200, 50, 50);
+		pVerwaltungsmod.add(btnDelTitel);
+		btnDelTitel.setBounds(780, 260, 50, 50);
+		
+		pVerwaltungsmod.add(lblTitel);
+		lblTitel.setBounds(50, 425, 200, 25);
+		pVerwaltungsmod.add(lblInterpret);
+		lblInterpret.setBounds(50, 475, 200, 25);
+		pVerwaltungsmod.add(lblAlbum);
+		lblAlbum.setBounds(275, 425, 200, 25);
+		pVerwaltungsmod.add(lblGenre);
+		lblGenre.setBounds(275, 475, 200, 25);
+		
+		pVerwaltungsmod.add(tfTitel);
+		tfTitel.setBounds(50, 450, 200, 25);
+		pVerwaltungsmod.add(tfInterpret);
+		tfInterpret.setBounds(50, 500, 200, 25);
+		pVerwaltungsmod.add(tfAlbum);
+		tfAlbum.setBounds(275, 450, 200, 25);
+		pVerwaltungsmod.add(tfGenre);
+		tfGenre.setBounds(275, 500, 200, 25);
+		
+		pVerwaltungsmod.add(scpAlleTitel);
+		scpAlleTitel.setBounds(50, 200, 700, 200);
 	}
 	
 	public void bModusAuf() {
