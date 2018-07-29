@@ -8,17 +8,21 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -26,11 +30,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 public class MusikGUI extends JFrame {
 	
 	MusikPlayer player = new MusikPlayer();
 	MusikPlaylist playlist = new MusikPlaylist();
+	MusikDaten musikdaten = new MusikDaten();
 	
 	//Komponenten
 	Container cp;						//contentPane
@@ -54,14 +61,12 @@ public class MusikGUI extends JFrame {
 	
 	JProgressBar progBar = new JProgressBar();
 	
-	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre"};
+	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre", "Datum", "Pfad"};
 	
-	Object[][] data = {
-		    {new Integer(1), "Leider Geil", "Deichkind", "Befehl von ganz unten", "Electronic"},
-		    {new Integer(2), "So ne Musik", "Deichkind", "Niveau Weshalb Warum", "Electronic"},
-	};
+	String[][] data = playlist.playlistLesen("alleLieder");
 	
-	JTable tblPlaylist = new JTable(data, columnNames);
+	DefaultTableModel dtm = new DefaultTableModel(data, columnNames);
+	JTable tblPlaylist = new JTable(dtm);
 	JScrollPane scpPlaylist = new JScrollPane(tblPlaylist);
 	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
@@ -134,13 +139,15 @@ public class MusikGUI extends JFrame {
 		cp.add(pBenutzermod);
 		
 		pBenutzermod.add(scpPlaylist);
-		scpPlaylist.setBounds(50, 200, 700, 200);
+		scpPlaylist.setBounds(50, 200, 800, 200);
 		
 		pBenutzermod.add(lblPlaylisten);
 		lblPlaylisten.setForeground(Color.WHITE);
 		lblPlaylisten.setBounds(50, 70, 200, 30);
+		
 		pBenutzermod.add(cPlaylist);
 		cPlaylist.setBounds(50, 100, 200, 30);
+		cPlaylist.addActionListener(e->playlistWechseln());
 		
 		pBenutzermod.add(btnPlay);
 		btnPlay.setBounds(50, 550, 38, 38);
@@ -174,7 +181,7 @@ public class MusikGUI extends JFrame {
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(progBar);
-		progBar.setBounds(50, 600, 700, 30);
+		progBar.setBounds(50, 600, 800, 30);
 		progBar.setValue(15);
 			
 		pBenutzermod.add(lblAktTitel);
@@ -190,6 +197,7 @@ public class MusikGUI extends JFrame {
 		
 		pVerwaltungsmod.add(btnAddTitel);
 		btnAddTitel.setBounds(780, 200, 50, 50);
+		btnAddTitel.addActionListener(e->neuerTitel());
 		pVerwaltungsmod.add(btnDelTitel);
 		btnDelTitel.setBounds(780, 260, 50, 50);
 		
@@ -213,6 +221,62 @@ public class MusikGUI extends JFrame {
 		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(50, 200, 700, 200);
+	}
+	
+	String path = new String(); //nicht optimal
+	
+	private void neuerTitel() {
+		JPanel pNeuerTitel = new JPanel();
+		JTextField tfTitel = new JTextField(8);
+	    JTextField tfInterpret = new JTextField(8);
+	    JTextField tfAlbum = new JTextField(8);
+	    JButton btnPfad = new JButton("...");
+	      
+	    String[] strGenre = {
+	 	         "Pop",
+	 	         "Rock",
+	 	         "Dance/Electronic",
+	 	         "HipHop",
+	 	         "Black Music",
+	 	         "Alternative",
+	 	         "Metal",
+	 	         "Klassik",
+	 	         "Volksmusik",
+	 	         "Schlager",
+	 	         "Comedy",
+	 	         "Jazz",
+	 	         "Sonstiges"
+	 	};
+	      
+	      JComboBox cGenreListe = new JComboBox(strGenre);
+	      pNeuerTitel.add(new JLabel("Titel:"));
+	      pNeuerTitel.add(tfTitel);
+	      pNeuerTitel.add(new JLabel("Interpret:"));
+	      pNeuerTitel.add(tfInterpret);
+	      pNeuerTitel.add(new JLabel("Album:"));
+	      pNeuerTitel.add(tfAlbum);
+	      pNeuerTitel.add(new JLabel("Genre:"));
+	      pNeuerTitel.add(cGenreListe);
+	      pNeuerTitel.add(new JLabel("Pfad:"));
+	      pNeuerTitel.add(btnPfad);
+	      
+	      btnPfad.addActionListener(e->optPfad());
+	      
+	      int result = JOptionPane.showConfirmDialog(null, pNeuerTitel, "Neuen Titel hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+	      if (result == JOptionPane.OK_OPTION) {
+	    	  musikdaten.MusikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
+	      }
+}
+	
+	private void optPfad() {
+		JButton open = new JButton();
+  	  	JFileChooser fc = new JFileChooser();
+  	  	FileNameExtensionFilter filter = new FileNameExtensionFilter(".wav", "wav");
+  	  	fc.setFileFilter(filter);
+  	  	fc.setAcceptAllFileFilterUsed(false);
+  	  	fc.setDialogTitle("Pfad des Musikstückes:");
+  	  	if (fc.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {}
+  	  	path = fc.getSelectedFile().getAbsolutePath();
 	}
 	
 	public void bModusAuf() {
@@ -269,9 +333,7 @@ public class MusikGUI extends JFrame {
 				
 				player.musikWeiterspielen();
 			}
-			
-			
-			
+				
 		}
 		
 	}
@@ -292,6 +354,14 @@ public class MusikGUI extends JFrame {
 			player.musikStoppen();
 		}
 		
+	}
+	
+	public void playlistWechseln() {
+		
+		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+		
+		dtm.setDataVector(data, columnNames);
+		dtm.fireTableDataChanged();
 	}
 	
 }
