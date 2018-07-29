@@ -58,7 +58,7 @@ public class MusikGUI extends JFrame {
 	
 	JButton btnPlay = new JButton();
 	JButton btnStop = new JButton();
-	JButton btnNewPlaylist = new JButton("+");
+	JButton btnNewPlaylist = new JButton("Neue Playlist");
 	
 	JProgressBar progBar = new JProgressBar();
 	
@@ -138,6 +138,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(cPlaylist);
 		cPlaylist.setBounds(50, 100, 200, 30);
+		cPlaylist.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cPlaylist.addActionListener(e->playlistWechseln());
 		
 		pBenutzermod.add(btnPlay);
@@ -189,8 +190,10 @@ public class MusikGUI extends JFrame {
 		pVerwaltungsmod.add(btnAddTitel);
 		btnAddTitel.setBounds(780, 200, 50, 50);
 		btnAddTitel.addActionListener(e->neuerTitel());
+		btnAddTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		pVerwaltungsmod.add(btnDelTitel);
 		btnDelTitel.setBounds(780, 260, 50, 50);
+		btnDelTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(50, 200, 700, 200);
