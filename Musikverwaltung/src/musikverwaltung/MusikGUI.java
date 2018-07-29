@@ -206,6 +206,7 @@ public class MusikGUI extends JFrame {
 	    JButton btnPfad = new JButton("...");
 	      
 	    String[] strGenre = {
+	    		 "Auswählen...",
 	 	         "Pop",
 	 	         "Rock",
 	 	         "Dance/Electronic",
@@ -248,8 +249,9 @@ public class MusikGUI extends JFrame {
   	  	fc.setFileFilter(filter);
   	  	fc.setAcceptAllFileFilterUsed(false);
   	  	fc.setDialogTitle("Pfad des Musikstückes:");
-  	  	if (fc.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {}
-  	  	path = fc.getSelectedFile().getAbsolutePath();
+  	  	if (fc.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
+  	  	  path = fc.getSelectedFile().getAbsolutePath();
+  	  	}
 	}
 
 	public void bModusAuf() {
