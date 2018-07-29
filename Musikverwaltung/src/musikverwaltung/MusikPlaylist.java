@@ -2,6 +2,10 @@ package musikverwaltung;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -9,13 +13,40 @@ import javax.swing.JOptionPane;
 public class MusikPlaylist {
 	
 	public void playlistSpeichern() {
+		
 		JFrame parent = new JFrame();
-		 String name = JOptionPane.showInputDialog(parent,
-                 "What is your name?", null);
+		String name = JOptionPane.showInputDialog(parent,"What is your name?", null);
 	}
 	
-	public void playlistLesen() {
+	public String[][] playlistLesen(String strPlaylist) {
 		
+		File fPlaylist = new File("playlists/" + strPlaylist + ".txt");
+		ArrayList<String> list = new ArrayList<String>();
+		
+		try {
+			Scanner s = new Scanner(fPlaylist);
+			
+			while (s.hasNextLine()){
+				list.add(s.nextLine());
+			}
+			s.close();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+			
+		String[][] data = new String[list.size()][];
+		String helper;
+		
+		for (int i = 0; i < list.size(); i++) {
+			
+			helper = Integer.toString(i+1) + "," + list.get(i).toString();
+			
+			String[] row = list.get(i).replaceFirst(list.get(i).substring(0, list.get(i).length()), helper).split(",");
+		    data[i] = row;
+		}
+		
+		return data;
 	}
 	
 	public String[] allePlaylists() {
@@ -43,6 +74,5 @@ public class MusikPlaylist {
 		}
 		
 		return listPlaylists.toArray(new String[0]);
-	}
-	
+	}	
 }
