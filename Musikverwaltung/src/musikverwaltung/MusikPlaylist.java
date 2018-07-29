@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class MusikPlaylist {
 	
 	public void playlistSpeichern() {
 		
-		String playlistName = JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION);
+		ImageIcon icon = new ImageIcon("icons/playlist.png");
+		String strdefault = new String("Name...");
+		String playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 		
 		if (playlistName != null) {
 			
