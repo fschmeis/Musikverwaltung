@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -69,6 +71,7 @@ public class MusikGUI extends JFrame {
 	DefaultTableModel dtm = new DefaultTableModel(data, columnNames);
 	JTable tblPlaylist = new JTable(dtm);
 	JScrollPane scpPlaylist = new JScrollPane(tblPlaylist);
+	
 	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
 	//Verwaltungsmodus-Komponenten
@@ -331,6 +334,8 @@ public class MusikGUI extends JFrame {
 			
 			player.musikStoppen();
 		}
+		
+		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));
 		
 	}
 	

@@ -8,24 +8,28 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 public class MusikPlaylist {
+	
 	public void playlistSpeichern() {
 		
 		String playlistName = JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION);
+		
 		if (playlistName != null) {
+			
 			if (playlistName.equals("")) {
 				JOptionPane.showMessageDialog(null, "Keinen Namen angegeben!", "", JOptionPane.WARNING_MESSAGE);
 			}
 			else {
+				
 				File file = new File("playlists/" + playlistName + ".txt");
+				
 				try {
 					file.createNewFile();		
 				} catch (IOException e) {
-				e.printStackTrace();
+					e.printStackTrace();
 				}
 			}
 		}
 		
-			
 	}
 	
 	public void playlistLoeschen() {}
