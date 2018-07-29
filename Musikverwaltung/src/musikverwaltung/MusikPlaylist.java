@@ -3,10 +3,15 @@ package musikverwaltung;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class MusikPlaylist {
 	
 	public void playlistSpeichern() {
-		
+		JFrame parent = new JFrame();
+		 String name = JOptionPane.showInputDialog(parent,
+                 "What is your name?", null);
 	}
 	
 	public void playlistLesen() {

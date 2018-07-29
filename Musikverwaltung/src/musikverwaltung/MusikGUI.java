@@ -14,11 +14,13 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -26,11 +28,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MusikGUI extends JFrame {
 	
 	MusikPlayer player = new MusikPlayer();
 	MusikPlaylist playlist = new MusikPlaylist();
+	MusikDaten musikdaten = new MusikDaten();
 	
 	//Komponenten
 	Container cp;						//contentPane
@@ -66,16 +70,6 @@ public class MusikGUI extends JFrame {
 	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
 	//Verwaltungsmodus-Komponenten
-	JLabel lblTitel = new JLabel("Titel");
-	JLabel lblInterpret = new JLabel("Interpret");
-	JLabel lblAlbum = new JLabel("Album");
-	JLabel lblGenre = new JLabel("Genre");
-	
-	JTextField tfTitel = new JTextField();
-	JTextField tfInterpret = new JTextField();
-	JTextField tfAlbum = new JTextField();
-	JTextField tfGenre = new JTextField();
-	
 	JButton btnAddTitel = new JButton("+");
 	JButton btnDelTitel = new JButton("-");
 	
@@ -170,7 +164,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnNewPlaylist);
 		btnNewPlaylist.setBounds(260, 100, 150, 30);
-		btnNewPlaylist.addActionListener(e->stoppen());
+		btnNewPlaylist.addActionListener(e->{playlist.playlistSpeichern(); stoppen();});
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(progBar);
@@ -190,31 +184,70 @@ public class MusikGUI extends JFrame {
 		
 		pVerwaltungsmod.add(btnAddTitel);
 		btnAddTitel.setBounds(780, 200, 50, 50);
+		btnAddTitel.addActionListener(e->neuerTitel());
 		pVerwaltungsmod.add(btnDelTitel);
 		btnDelTitel.setBounds(780, 260, 50, 50);
-		
-		pVerwaltungsmod.add(lblTitel);
-		lblTitel.setBounds(50, 425, 200, 25);
-		pVerwaltungsmod.add(lblInterpret);
-		lblInterpret.setBounds(50, 475, 200, 25);
-		pVerwaltungsmod.add(lblAlbum);
-		lblAlbum.setBounds(275, 425, 200, 25);
-		pVerwaltungsmod.add(lblGenre);
-		lblGenre.setBounds(275, 475, 200, 25);
-		
-		pVerwaltungsmod.add(tfTitel);
-		tfTitel.setBounds(50, 450, 200, 25);
-		pVerwaltungsmod.add(tfInterpret);
-		tfInterpret.setBounds(50, 500, 200, 25);
-		pVerwaltungsmod.add(tfAlbum);
-		tfAlbum.setBounds(275, 450, 200, 25);
-		pVerwaltungsmod.add(tfGenre);
-		tfGenre.setBounds(275, 500, 200, 25);
 		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(50, 200, 700, 200);
 	}
 	
+	String path = new String(); //nicht optimal
+	
+	private void neuerTitel() {
+		JPanel pNeuerTitel = new JPanel();
+		JTextField tfTitel = new JTextField(8);
+	    JTextField tfInterpret = new JTextField(8);
+	    JTextField tfAlbum = new JTextField(8);
+	    JButton btnPfad = new JButton("...");
+	      
+	      String[] strGenre = {
+	 	         "Pop",
+	 	         "Rock",
+	 	         "Dance/Electronic",
+	 	         "HipHop",
+	 	         "Black Music",
+	 	         "Alternative",
+	 	         "Metal",
+	 	         "Klassik",
+	 	         "Volksmusik",
+	 	         "Schlager",
+	 	         "Comedy",
+	 	         "Jazz",
+	 	         "Sonstiges"
+	 	};
+	      JComboBox cGenreListe = new JComboBox(strGenre);
+	      pNeuerTitel.add(new JLabel("Titel:"));
+	      pNeuerTitel.add(tfTitel);
+	      pNeuerTitel.add(new JLabel("Interpret:"));
+	      pNeuerTitel.add(tfInterpret);
+	      pNeuerTitel.add(new JLabel("Album:"));
+	      pNeuerTitel.add(tfAlbum);
+	      pNeuerTitel.add(new JLabel("Genre:"));
+	      pNeuerTitel.add(cGenreListe);
+	      pNeuerTitel.add(new JLabel("Pfad:"));
+	      pNeuerTitel.add(btnPfad);
+	      
+	      btnPfad.addActionListener(e->optPfad());
+	      
+	      int result = JOptionPane.showConfirmDialog(null, pNeuerTitel, 
+	               "Neuen Titel hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+	      if (result == JOptionPane.OK_OPTION) {
+	         musikdaten.MusikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
+	      }
+	}
+
+	private void optPfad() {
+		JButton open = new JButton();
+  	  	JFileChooser fc = new JFileChooser();
+  	  	FileNameExtensionFilter filter = new FileNameExtensionFilter(".wav", "wav");
+  	  	fc.setFileFilter(filter);
+  	  	fc.setAcceptAllFileFilterUsed(false);
+  	  	fc.setDialogTitle("Pfad des Musikstückes:");
+  	  	if (fc.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {}
+  	  	path = fc.getSelectedFile().getAbsolutePath();
+	}
+
 	public void bModusAuf() {
 		pBenutzermod.setVisible(true);
 		pVerwaltungsmod.setVisible(false);
