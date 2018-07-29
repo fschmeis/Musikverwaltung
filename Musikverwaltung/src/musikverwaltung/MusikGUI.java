@@ -55,7 +55,7 @@ public class MusikGUI extends JFrame {
 	JMenuItem bModusItem;
 	JMenuItem vModusItem;
 	
-	//Benutzermodus-Komponenten
+	//--------------------------------------------Benutzermodus-Komponenten-------------------------------------------------------
 	JLabel lblPlaylisten = new JLabel("Playlisten");
 	
 	JButton btnPlay = new JButton();
@@ -68,17 +68,32 @@ public class MusikGUI extends JFrame {
 	
 	String[][] data = playlist.playlistLesen("alleLieder");
 	
-	DefaultTableModel dtm = new DefaultTableModel(data, columnNames);
-	JTable tblPlaylist = new JTable(dtm);
+	DefaultTableModel dtmPlaylist = new DefaultTableModel(data, columnNames) {
+		@Override
+	    public boolean isCellEditable(int row, int column) {
+	       //alle Zellen sind nicht editierbar
+	       return false;
+	    }
+	};
+	
+	JTable tblPlaylist = new JTable(dtmPlaylist);
 	JScrollPane scpPlaylist = new JScrollPane(tblPlaylist);
 	
 	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
-	//Verwaltungsmodus-Komponenten
+	//------------------------------------------Verwaltungsmodus-Komponenten--------------------------------------------------------
 	JButton btnAddTitel = new JButton("+");
 	JButton btnDelTitel = new JButton("-");
 	
-	JTable tblAlleTitel = new JTable(data, columnNames);
+	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
+		@Override
+	    public boolean isCellEditable(int row, int column) {
+	       //alle Zellen sind nicht editierbar
+	       return false;
+	    }
+	};
+	
+	JTable tblAlleTitel = new JTable(dtmAlleTitel);
 	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
 		
 	//sonst. Variablen	
@@ -131,6 +146,10 @@ public class MusikGUI extends JFrame {
 		pBenutzermod.setLayout(null);
 		pBenutzermod.setBackground(Color.DARK_GRAY);
 		cp.add(pBenutzermod);
+		
+		//Horizontale Linien ausblenden
+		tblPlaylist.setShowHorizontalLines(false);
+		tblAlleTitel.setShowHorizontalLines(false);
 		
 		pBenutzermod.add(scpPlaylist);
 		scpPlaylist.setBounds(50, 200, 800, 200);
@@ -246,6 +265,11 @@ public class MusikGUI extends JFrame {
 	      if (result == JOptionPane.OK_OPTION) {
 	    	  musikdaten.MusikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
 	      }
+	      
+	      data = playlist.playlistLesen("alleLieder");
+			
+	      dtmPlaylist.setDataVector(data, columnNames);
+	      dtmPlaylist.fireTableDataChanged();
 }
 	
 	private void optPfad() {
@@ -343,8 +367,8 @@ public class MusikGUI extends JFrame {
 		
 		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
 		
-		dtm.setDataVector(data, columnNames);
-		dtm.fireTableDataChanged();
+		dtmPlaylist.setDataVector(data, columnNames);
+		dtmPlaylist.fireTableDataChanged();
 	}
 	
 }
