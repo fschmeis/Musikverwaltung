@@ -10,6 +10,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
@@ -99,6 +101,7 @@ public class MusikGUI extends JFrame {
 	//sonst. Variablen	
 	boolean play = false;
 	boolean pause = false;
+	int selectedRow = 0;
 	
 	JLabel lblAktTitel = new JLabel(data[0][1] + " - " + data[0][2]);	//Vom Titel abhängiges Label
 	
@@ -150,6 +153,16 @@ public class MusikGUI extends JFrame {
 		//Horizontale Linien ausblenden
 		tblPlaylist.setShowHorizontalLines(false);
 		tblAlleTitel.setShowHorizontalLines(false);
+		
+		//Mouse-Listener
+        tblPlaylist.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                int row = tblPlaylist.rowAtPoint(evt.getPoint());
+                int col = tblPlaylist.columnAtPoint(evt.getPoint());
+
+            }
+        });
 		
 		pBenutzermod.add(scpPlaylist);
 		scpPlaylist.setBounds(50, 200, 800, 200);
@@ -308,7 +321,16 @@ public class MusikGUI extends JFrame {
 				play = true;
 				pause = false;
 				
-				player.musikAbspielen(0L);
+                if(tblPlaylist.getSelectedRow() == -1) {
+                    selectedRow = 0;
+                }
+                else {
+                    selectedRow = tblPlaylist.getSelectedRow();
+                }
+       
+       
+                player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 6).toString());
+
 		}
 		else {
 			

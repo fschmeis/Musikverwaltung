@@ -26,12 +26,12 @@ public class MusikPlayer {
 	AudioFormat audioFormat;
 	long duration;
 	
-	public void musikAbspielen(long dauer) {
+	public void musikAbspielen(String pfad) {
 		
 			new Thread(new Runnable() {
 	            public void run() {
 	                try {
-	                	audioFilePath = "music/Leider Geil.wav";
+	                	audioFilePath = pfad;
 	            		
 	            		audioFile = new File(audioFilePath);
 	            		 
