@@ -342,7 +342,6 @@ public class MusikGUI extends JFrame {
                     selectedRow = tblPlaylist.getSelectedRow();
                 }
        
-       
                 player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 6).toString());
 
 		}
