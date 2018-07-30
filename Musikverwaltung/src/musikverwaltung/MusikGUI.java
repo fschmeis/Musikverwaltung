@@ -187,7 +187,7 @@ public class MusikGUI extends JFrame {
 		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("Musikverwaltung/icons/play.png"));
+			Image img = ImageIO.read(new FileInputStream("icons/play.png"));
 		    btnPlay.setIcon(new ImageIcon(img));
 		    btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -200,7 +200,7 @@ public class MusikGUI extends JFrame {
 		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("Musikverwaltung/icons/stop.png"));
+			Image img = ImageIO.read(new FileInputStream("icons/stop.png"));
 			btnStop.setIcon(new ImageIcon(img));
 			btnStop.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {

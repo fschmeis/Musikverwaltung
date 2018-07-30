@@ -39,7 +39,7 @@ public class MusikPlaylist {
 	
 	public String[][] playlistLesen(String strPlaylist) {
 		
-		File fPlaylist = new File("Musikverwaltung/playlists/" + strPlaylist + ".txt");
+		File fPlaylist = new File("playlists/" + strPlaylist + ".txt");
 		ArrayList<String> list = new ArrayList<String>();
 		
 		try {
@@ -76,11 +76,9 @@ public class MusikPlaylist {
 		
 		int iExtension = 0;
 		
-		File folder = new File("Musikverwaltung/playlists/");
+		File folder = new File("playlists/");
 		File[] listOfFiles = folder.listFiles();
 
-		listPlaylists.add("bitte auswählen...");
-		
 		for (int i = 0; i < listOfFiles.length; i++) {
 			
 			iExtension = listOfFiles[i].getName().lastIndexOf('.');
