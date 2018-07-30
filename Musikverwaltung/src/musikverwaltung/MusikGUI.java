@@ -65,12 +65,14 @@ public class MusikGUI extends JFrame {
 	JButton btnPrevious = new JButton();
 	JButton btnNext = new JButton();
 	JButton btnNewPlaylist = new JButton("Neue Playlist");
+	JButton btnAddToPlaylist = new JButton("Titel hinzufügen");
 	
 	JProgressBar progBar = new JProgressBar();
 	
 	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre", "Datum", "Pfad"};
 	
 	String[][] data = playlist.playlistLesen("alleLieder");
+	JLabel lblAktTitel = new JLabel("");	//Vom Titel abhängiges Label
 	
 	DefaultTableModel dtmPlaylist = new DefaultTableModel(data, columnNames) {
 		@Override
@@ -109,8 +111,6 @@ public class MusikGUI extends JFrame {
 	boolean play = false;
 	boolean pause = false;
 	int selectedRow = 0;
-
-	JLabel lblAktTitel = new JLabel(data[0][1] + " - " + data[0][2]);	//Vom Titel abhängiges Label
 	
 	//Konstruktor
 	public MusikGUI() {
@@ -254,6 +254,11 @@ public class MusikGUI extends JFrame {
 		btnNewPlaylist.addActionListener(e->{playlist.playlistSpeichern(); stoppen();});
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
+		pBenutzermod.add(btnAddToPlaylist);
+		btnAddToPlaylist.setBounds(420, 100, 150, 30);
+		btnAddToPlaylist.addActionListener(e->{stoppen();});
+		btnAddToPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
 		pBenutzermod.add(progBar);
 		progBar.setBounds(50, 600, 800, 30);
 		progBar.setValue(15);
@@ -354,8 +359,8 @@ public class MusikGUI extends JFrame {
 	      
 	      data = playlist.playlistLesen("alleLieder");
 			
-	      dtmPlaylist.setDataVector(data, columnNames);
-	      dtmPlaylist.fireTableDataChanged();
+	      dtmAlleTitel.setDataVector(data, columnNames);
+	      dtmAlleTitel.fireTableDataChanged();
 }
 	
 	private void optPfad() {
@@ -404,6 +409,7 @@ public class MusikGUI extends JFrame {
             }
             
             player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 6).toString());
+            lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 1) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 2));
 		}
 		else {
 			if(pause == false) {
