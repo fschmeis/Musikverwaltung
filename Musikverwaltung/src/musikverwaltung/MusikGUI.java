@@ -107,7 +107,7 @@ public class MusikGUI extends JFrame {
 	boolean play = false;
 	boolean pause = false;
 	int selectedRow = 0;
-	
+
 	JLabel lblAktTitel = new JLabel(data[0][1] + " - " + data[0][2]);	//Vom Titel abhängiges Label
 	
 	//Konstruktor
@@ -308,6 +308,7 @@ public class MusikGUI extends JFrame {
   	  	fc.setDialogTitle("Pfad des Musikstückes:");
   	  	if (fc.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
   	  	  path = fc.getSelectedFile().getAbsolutePath();
+  	  	  path = path.replace("\\", "/");
   	  	}
 	}
 

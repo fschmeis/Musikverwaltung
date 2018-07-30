@@ -13,7 +13,6 @@ public class MusikPlaylist {
 	public void playlistSpeichern() {
 		
 		ImageIcon icon = new ImageIcon("icons/playlist.png");
-		String strdefault = new String("Name...");
 		String playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 		
 		if (playlistName != null) {

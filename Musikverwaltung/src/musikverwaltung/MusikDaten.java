@@ -14,7 +14,7 @@ public class MusikDaten {
 		}
 		else {
 			try {
-				File f = new File("playlists/AlleTitel.txt");
+				File f = new File("playlists/alleLieder.txt");
 				PrintWriter pw = new PrintWriter(new FileOutputStream(f,true));
 				String date = new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
 				pw.append(titel + "," + interpret + "," + album + "," + genre + "," + date + "," + path + "\n");
