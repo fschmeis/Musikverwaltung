@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class MusikPlaylist {
 	
 	public void playlistSpeichern() {
 		
-		String playlistName = JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION);
+		ImageIcon icon = new ImageIcon("icons/playlist.png");
+		String strdefault = new String("Name...");
+		String playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 		
 		if (playlistName != null) {
 			
@@ -36,7 +39,7 @@ public class MusikPlaylist {
 	
 	public String[][] playlistLesen(String strPlaylist) {
 		
-		File fPlaylist = new File("playlists/" + strPlaylist + ".txt");
+		File fPlaylist = new File("Musikverwaltung/playlists/" + strPlaylist + ".txt");
 		ArrayList<String> list = new ArrayList<String>();
 		
 		try {
@@ -73,7 +76,7 @@ public class MusikPlaylist {
 		
 		int iExtension = 0;
 		
-		File folder = new File("playlists/");
+		File folder = new File("Musikverwaltung/playlists/");
 		File[] listOfFiles = folder.listFiles();
 
 		listPlaylists.add("bitte auswählen...");
