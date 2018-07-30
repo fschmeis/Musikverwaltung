@@ -62,6 +62,8 @@ public class MusikGUI extends JFrame {
 	
 	JButton btnPlay = new JButton();
 	JButton btnStop = new JButton();
+	JButton btnPrevious = new JButton();
+	JButton btnNext = new JButton();
 	JButton btnNewPlaylist = new JButton("Neue Playlist");
 	
 	JProgressBar progBar = new JProgressBar();
@@ -84,8 +86,8 @@ public class MusikGUI extends JFrame {
 	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
 	//------------------------------------------Verwaltungsmodus-Komponenten--------------------------------------------------------
-	JButton btnAddTitel = new JButton("+");
-	JButton btnDelTitel = new JButton("-");
+	JButton btnAddTitel = new JButton();
+	JButton btnDelTitel = new JButton();
 	
 	JLabel lblSort = new JLabel("Sortieren nach:");
 	
@@ -127,6 +129,9 @@ public class MusikGUI extends JFrame {
 		//Beenden bei Klick auf rotes Kreuz
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
+		//Programm-Icon
+		this.setIconImage(new ImageIcon("icons/speaker.png").getImage());
+		
 		//Menu
 		bar = new JMenuBar();
 		dateimenu = new JMenu("Datei");
@@ -159,12 +164,23 @@ public class MusikGUI extends JFrame {
 		tblPlaylist.setShowHorizontalLines(false);
 		tblAlleTitel.setShowHorizontalLines(false);
 		
-		//Mouse-Listener
+		//Farbe der ausgewählten Reihe
+		tblPlaylist.setSelectionBackground(Color.ORANGE);
+		tblAlleTitel.setSelectionBackground(Color.ORANGE);
+		
+		//Mouse-Listener tblPlaylist
         tblPlaylist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                int row = tblPlaylist.rowAtPoint(evt.getPoint());
-                int col = tblPlaylist.columnAtPoint(evt.getPoint());
+//                int row = tblPlaylist.rowAtPoint(evt.getPoint());
+//                int col = tblPlaylist.columnAtPoint(evt.getPoint());
+                
+                if (evt.getClickCount() == 1) {
+                    stoppen();
+                }
+                else {
+                	abspielen();
+                }
 
             }
         });
@@ -181,8 +197,21 @@ public class MusikGUI extends JFrame {
 		cPlaylist.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cPlaylist.addActionListener(e->playlistWechseln());
 		
+		pBenutzermod.add(btnPrevious);
+		btnPrevious.setBounds(50, 550, 38, 38);
+		btnPrevious.addActionListener(e->previousTitel());
+		btnPrevious.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		try {
+			Image img = ImageIO.read(new FileInputStream("icons/previous.png"));
+			btnPrevious.setIcon(new ImageIcon(img));
+			btnPrevious.setHorizontalTextPosition(SwingConstants.CENTER);
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
+		
 		pBenutzermod.add(btnPlay);
-		btnPlay.setBounds(50, 550, 38, 38);
+		btnPlay.setBounds(100, 550, 38, 38);
 		btnPlay.addActionListener(e->abspielen());
 		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
@@ -195,7 +224,7 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnStop);
-		btnStop.setBounds(100, 550, 38, 38);
+		btnStop.setBounds(150, 550, 38, 38);
 		btnStop.addActionListener(e->stoppen());
 		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
@@ -203,6 +232,19 @@ public class MusikGUI extends JFrame {
 			Image img = ImageIO.read(new FileInputStream("icons/stop.png"));
 			btnStop.setIcon(new ImageIcon(img));
 			btnStop.setHorizontalTextPosition(SwingConstants.CENTER);
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
+		
+		pBenutzermod.add(btnNext);
+		btnNext.setBounds(200, 550, 38, 38);
+		btnNext.addActionListener(e->nextTitel());
+		btnNext.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		try {
+			Image img = ImageIO.read(new FileInputStream("icons/next.png"));
+			btnNext.setIcon(new ImageIcon(img));
+			btnNext.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
 		    System.out.println(ex);
 		}
@@ -218,7 +260,7 @@ public class MusikGUI extends JFrame {
 			
 		pBenutzermod.add(lblAktTitel);
 		lblAktTitel.setForeground(Color.WHITE);
-		lblAktTitel.setBounds(150, 550, 200, 38);
+		lblAktTitel.setBounds(250, 550, 200, 38);
 		
 		//Verwaltungsmodus-Panel
 		pVerwaltungsmod = new JPanel();
@@ -228,12 +270,29 @@ public class MusikGUI extends JFrame {
 		cp.add(pVerwaltungsmod);
 		
 		pVerwaltungsmod.add(btnAddTitel);
-		btnAddTitel.setBounds(780, 200, 50, 50);
+		btnAddTitel.setBounds(780, 200, 38, 38);
 		btnAddTitel.addActionListener(e->neuerTitel());
 		btnAddTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		try {
+			Image img = ImageIO.read(new FileInputStream("icons/plus.png"));
+			btnAddTitel.setIcon(new ImageIcon(img));
+			btnAddTitel.setHorizontalTextPosition(SwingConstants.CENTER);
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
+		
 		pVerwaltungsmod.add(btnDelTitel);
-		btnDelTitel.setBounds(780, 260, 50, 50);
+		btnDelTitel.setBounds(780, 260, 38, 38);
 		btnDelTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		try {
+			Image img = ImageIO.read(new FileInputStream("icons/minus.png"));
+			btnDelTitel.setIcon(new ImageIcon(img));
+			btnDelTitel.setHorizontalTextPosition(SwingConstants.CENTER);
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
 		
 		pVerwaltungsmod.add(lblSort);
 		lblSort.setForeground(Color.WHITE);
@@ -325,29 +384,28 @@ public class MusikGUI extends JFrame {
 	public void abspielen() {
 		
 		if(play == false) {
-				try {
-					Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
-					btnPlay.setIcon(new ImageIcon(img));
-					btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
-				} catch (Exception ex) {
-				    System.out.println(ex);
-				}
+			try {
+				Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
+				btnPlay.setIcon(new ImageIcon(img));
+				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+			} catch (Exception ex) {
+				System.out.println(ex);
+			}
 				
-				play = true;
-				pause = false;
+			play = true;
+			pause = false;
 				
-                if(tblPlaylist.getSelectedRow() == -1) {
-                    selectedRow = 0;
-                }
-                else {
-                    selectedRow = tblPlaylist.getSelectedRow();
-                }
-       
-                player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 6).toString());
-
+            if(tblPlaylist.getSelectedRow() == -1) {
+            	selectedRow = 0;
+            	tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
+            }
+            else {
+                selectedRow = tblPlaylist.getSelectedRow();
+            }
+            
+            player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 6).toString());
 		}
 		else {
-			
 			if(pause == false) {
 				try {
 					Image img = ImageIO.read(new FileInputStream("icons/play.png"));
@@ -395,11 +453,48 @@ public class MusikGUI extends JFrame {
 			player.musikStoppen();
 		}
 		
-		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));
+		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));	
+	}
+	
+	public void previousTitel() {
+		stoppen();
+		selectedRow--;
 		
+		if(selectedRow < tblPlaylist.getRowCount()) {
+			selectedRow = 0;
+			tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
+		}
+		else {
+			tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
+		}
+		
+		tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
+		abspielen();
+	}
+	
+	public void nextTitel() {
+		stoppen();
+		
+		selectedRow++;
+		
+		if(selectedRow < tblPlaylist.getRowCount()) {
+			tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
+		}
+		else {
+			selectedRow = 0;
+			tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
+		}
+		
+		abspielen();
 	}
 	
 	public void playlistWechseln() {
+		
+		int selectedPlaylist = cPlaylist.getSelectedIndex();
+		
+		stoppen();
+		
+		cPlaylist.setSelectedIndex(selectedPlaylist);
 		
 		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
 		
