@@ -13,9 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -34,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -106,11 +111,21 @@ public class MusikGUI extends JFrame {
 	
 	JTable tblAlleTitel = new JTable(dtmAlleTitel);
 	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
+	
+	ActionListener progressor = new ActionListener () {
+    	public void actionPerformed(ActionEvent evnt) {
+    		progress++;
+    		progBar.setValue(progress);
+    		progBar.setString(Integer.toString(progress));
+    	}
+    };
+    Timer timer = new Timer(1000, progressor);
 		
 	//sonst. Variablen	
 	boolean play = false;
 	boolean pause = false;
 	int selectedRow = 0;
+	int progress = 0;
 	
 	//Konstruktor
 	public MusikGUI() {
@@ -244,6 +259,7 @@ public class MusikGUI extends JFrame {
 		
 		try {
 			Image img = ImageIO.read(new FileInputStream("images/next.png"));
+			
 			btnNext.setIcon(new ImageIcon(img));
 			btnNext.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -259,10 +275,14 @@ public class MusikGUI extends JFrame {
 		btnAddToPlaylist.setBounds(390, 100, 150, 30);
 		btnAddToPlaylist.addActionListener(e->{stoppen();});
 		btnAddToPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
-		
+				
 		pBenutzermod.add(progBar);
 		progBar.setBounds(20, 600, 1000, 30);
-		progBar.setValue(15);
+		progBar.setValue(progress);
+		progBar.setBorderPainted(true);
+		progBar.setStringPainted(true);
+		
+		
 		
 		pBenutzermod.add(lblBenutzermodus);
 		lblBenutzermodus.setForeground(Color.WHITE);
@@ -394,7 +414,7 @@ public class MusikGUI extends JFrame {
 		pBenutzermod.setVisible(false);
 		pVerwaltungsmod.setVisible(true);
 	}
-	
+
 	public void abspielen() {
 		
 		if(play == false) {
@@ -417,8 +437,11 @@ public class MusikGUI extends JFrame {
                 selectedRow = tblPlaylist.getSelectedRow();
             }
             
+                 
             player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 5).toString());
             lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1));
+            progBar.setMaximum((int) player.duration);
+            timer.start();
 		}
 		else {
 			if(pause == false) {
@@ -431,8 +454,8 @@ public class MusikGUI extends JFrame {
 				}
 				
 				pause = true;
-				
 				player.musikStoppen();
+				timer.stop();
 			}
 			else {
 				try {
@@ -446,12 +469,14 @@ public class MusikGUI extends JFrame {
 				pause = false;
 				
 				player.musikWeiterspielen();
+				timer.start();
 			}
 				
 		}
 		
 	}
-	
+
+
 	public void stoppen() {
 		
 		if(play == true) {
@@ -473,6 +498,11 @@ public class MusikGUI extends JFrame {
 		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
+		
+		timer.stop();
+		progress = 0;
+		progBar.setValue(0);
+		progBar.setMaximum(100);
 	}
 	
 	public void previousTitel() {
@@ -519,6 +549,5 @@ public class MusikGUI extends JFrame {
 		
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
-	}
-
+	}	
 }

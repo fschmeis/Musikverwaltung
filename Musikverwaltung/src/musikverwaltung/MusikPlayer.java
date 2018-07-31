@@ -59,8 +59,8 @@ public class MusikPlayer {
 	                            }
 	                            
 	                            duration--;
-	                        }
-	                         
+	                        }     
+	                        
 	                        audioClip.close();
 	                         
 	                    } catch (UnsupportedAudioFileException ex) {
@@ -118,4 +118,5 @@ public class MusikPlayer {
             }
         }).start();
 	}
+
 }
