@@ -6,23 +6,16 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -100,7 +93,6 @@ public class MusikGUI extends JFrame {
 	JLabel lblVerwaltungsmodus = new JLabel("Verwaltungsmodus");
 	
 	JButton btnAddTitel = new JButton();
-	JButton btnDelTitel = new JButton();
 	
 	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
 		@Override
@@ -339,19 +331,7 @@ public class MusikGUI extends JFrame {
 		} catch (Exception ex) {
 		    System.out.println(ex);
 		}
-		
-		pVerwaltungsmod.add(btnDelTitel);
-		btnDelTitel.setBounds(70, 390, 38, 38);
-		btnDelTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
-		
-		try {
-			Image img = ImageIO.read(new FileInputStream("images/minus.png"));
-			btnDelTitel.setIcon(new ImageIcon(img));
-			btnDelTitel.setHorizontalTextPosition(SwingConstants.CENTER);
-		} catch (Exception ex) {
-		    System.out.println(ex);
-		}
-		
+				
 		pVerwaltungsmod.add(lblVerwaltungsmodus);
 		lblVerwaltungsmodus.setForeground(Color.WHITE);
 		lblVerwaltungsmodus.setBounds(20, 0, 400, 50);
