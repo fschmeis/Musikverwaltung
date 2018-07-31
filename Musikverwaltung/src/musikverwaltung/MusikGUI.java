@@ -91,11 +91,6 @@ public class MusikGUI extends JFrame {
 	JButton btnAddTitel = new JButton();
 	JButton btnDelTitel = new JButton();
 	
-	JLabel lblSort = new JLabel("Sortieren nach:");
-	
-	String CmbbxSort[] = {"Nr", "Titel", "Interpret", "Album", "Genre"};
-	JComboBox<String> sortieren = new JComboBox<String>(CmbbxSort);
-	
 	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
 		@Override
 	    public boolean isCellEditable(int row, int column) {
@@ -184,6 +179,7 @@ public class MusikGUI extends JFrame {
 
             }
         });
+        tblPlaylist.setAutoCreateRowSorter(true);
 		
 		pBenutzermod.add(scpPlaylist);
 		scpPlaylist.setBounds(50, 200, 800, 200);
@@ -299,17 +295,11 @@ public class MusikGUI extends JFrame {
 		    System.out.println(ex);
 		}
 		
-		pVerwaltungsmod.add(lblSort);
-		lblSort.setForeground(Color.WHITE);
-		lblSort.setBounds(50, 420, 200, 30);
-		
-		pVerwaltungsmod.add(sortieren);
-		sortieren.setBounds(50, 450, 200, 30);
-		sortieren.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		sortieren.addActionListener(e->Sortieren());
+		tblAlleTitel.setAutoCreateRowSorter(true);
 		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(50, 200, 700, 200);
+		//setAutoCreateRowSorter(true);
 	}
 	
 	String path = new String();	//nicht optimal
@@ -506,44 +496,6 @@ public class MusikGUI extends JFrame {
 		
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
-	}
-	
-	public void Sortieren() {
-		
-		int i;
-		String[] h;
-		
-		int kriterium;
-		
-		switch (sortieren.getSelectedItem().toString()) {
-		case "Nr": 			kriterium = 0;
-				   			break;
-		case "Titel": 		kriterium = 1;
-					  		break;
-		case "Interpret": 	kriterium = 2;
-						  	break;
-		case "Album": 		kriterium = 3;
-					  		break;
-		case "Genre": 		kriterium = 4;
-					  		break;
-		default: 			kriterium = 0;
-							break;
-		}
-		
-		i = data.length - 1;
-		
-		for(int j = 0; j <= i - 1; j++) {
-			for(int k = j + 1; k <= i; k++) {
-				if(data[j][kriterium].compareTo(data[k][kriterium]) > 0) {
-					h = data[j];
-					data[j] = data[k];
-					data[k] = h;
-				}
-			}
-		}
-		dtmAlleTitel.setDataVector(data, columnNames);
-		dtmAlleTitel.fireTableDataChanged();
-		
 	}
 	
 }
