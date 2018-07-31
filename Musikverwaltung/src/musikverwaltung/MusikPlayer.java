@@ -119,4 +119,12 @@ public class MusikPlayer {
         }).start();
 	}
 
+	public int getduration() {
+		try {
+		return ((int) audioClip.getMicrosecondLength()) / 1_000_000;
+		} catch(NullPointerException er) {
+			return 100;
+		}
+		}
+	
 }

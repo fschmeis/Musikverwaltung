@@ -116,7 +116,7 @@ public class MusikGUI extends JFrame {
     	public void actionPerformed(ActionEvent evnt) {
     		progress++;
     		progBar.setValue(progress);
-    		progBar.setString(Integer.toString(progress));
+    		progBar.setMaximum(player.getduration());
     	}
     };
     Timer timer = new Timer(1000, progressor);
@@ -279,10 +279,7 @@ public class MusikGUI extends JFrame {
 		pBenutzermod.add(progBar);
 		progBar.setBounds(20, 600, 1000, 30);
 		progBar.setValue(progress);
-		progBar.setBorderPainted(true);
-		progBar.setStringPainted(true);
-		
-		
+		progBar.setBorderPainted(true);		
 		
 		pBenutzermod.add(lblBenutzermodus);
 		lblBenutzermodus.setForeground(Color.WHITE);
@@ -439,8 +436,8 @@ public class MusikGUI extends JFrame {
             
                  
             player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 5).toString());
-            lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1));
-            progBar.setMaximum((int) player.duration);
+            lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1)); 
+            
             timer.start();
 		}
 		else {
@@ -502,7 +499,6 @@ public class MusikGUI extends JFrame {
 		timer.stop();
 		progress = 0;
 		progBar.setValue(0);
-		progBar.setMaximum(100);
 	}
 	
 	public void previousTitel() {
