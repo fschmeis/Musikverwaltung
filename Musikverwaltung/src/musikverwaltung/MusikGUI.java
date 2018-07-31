@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -58,6 +59,7 @@ public class MusikGUI extends JFrame {
 	JMenuItem vModusItem;
 	
 	//--------------------------------------------Benutzermodus-Komponenten-------------------------------------------------------
+	JLabel lblBenutzermodus = new JLabel("Benutzermodus");
 	JLabel lblPlaylisten = new JLabel("Playlisten");
 	
 	JButton btnPlay = new JButton();
@@ -69,9 +71,10 @@ public class MusikGUI extends JFrame {
 	
 	JProgressBar progBar = new JProgressBar();
 	
-	String[] columnNames = {"Nr", "Titel", "Interpret", "Album", "Genre", "Datum", "Pfad"};
+	String[] columnNames = {"Titel", "Interpret", "Album", "Genre", "Datum", "Pfad"};
 	
 	String[][] data = playlist.playlistLesen("alleLieder");
+	JLabel lblImage = new JLabel();
 	JLabel lblAktTitel = new JLabel("");	//Vom Titel abhängiges Label
 	
 	DefaultTableModel dtmPlaylist = new DefaultTableModel(data, columnNames) {
@@ -88,13 +91,15 @@ public class MusikGUI extends JFrame {
 	JComboBox<String> cPlaylist = new JComboBox<String>(playlist.allePlaylists());
 	
 	//------------------------------------------Verwaltungsmodus-Komponenten--------------------------------------------------------
+	JLabel lblVerwaltungsmodus = new JLabel("Verwaltungsmodus");
+	
 	JButton btnAddTitel = new JButton();
 	JButton btnDelTitel = new JButton();
 	
 	JLabel lblSort = new JLabel("Sortieren nach:");
 	
-	String CmbbxSort[] = {"Nr", "Titel", "Interpret", "Album", "Genre"};
-	JComboBox<String> sortieren = new JComboBox<String>(CmbbxSort);
+	String dataSort[] = {"Titel", "Interpret", "Album", "Genre"};
+	JComboBox<String> cSortieren = new JComboBox<String>(dataSort);
 	
 	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
 		@Override
@@ -118,7 +123,7 @@ public class MusikGUI extends JFrame {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
 		this.setTitle("Musikverwaltung");
-		this.setSize(1200, 700);
+		this.setSize(1060, 700);
 		
 		//Mitte des Bildschirms
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -130,7 +135,7 @@ public class MusikGUI extends JFrame {
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//Programm-Icon
-		this.setIconImage(new ImageIcon("icons/speaker.png").getImage());
+		this.setIconImage(new ImageIcon("images/speaker.png").getImage());
 		
 		//Menu
 		bar = new JMenuBar();
@@ -186,24 +191,24 @@ public class MusikGUI extends JFrame {
         });
 		
 		pBenutzermod.add(scpPlaylist);
-		scpPlaylist.setBounds(50, 200, 800, 200);
+		scpPlaylist.setBounds(20, 150, 1000, 200);
 		
 		pBenutzermod.add(lblPlaylisten);
 		lblPlaylisten.setForeground(Color.WHITE);
-		lblPlaylisten.setBounds(50, 70, 200, 30);
+		lblPlaylisten.setBounds(20, 70, 200, 30);
 		
 		pBenutzermod.add(cPlaylist);
-		cPlaylist.setBounds(50, 100, 200, 30);
+		cPlaylist.setBounds(20, 100, 200, 30);
 		cPlaylist.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cPlaylist.addActionListener(e->playlistWechseln());
 		
 		pBenutzermod.add(btnPrevious);
-		btnPrevious.setBounds(50, 550, 38, 38);
+		btnPrevious.setBounds(20, 550, 38, 38);
 		btnPrevious.addActionListener(e->previousTitel());
 		btnPrevious.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("icons/previous.png"));
+			Image img = ImageIO.read(new FileInputStream("images/previous.png"));
 			btnPrevious.setIcon(new ImageIcon(img));
 			btnPrevious.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -211,12 +216,12 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnPlay);
-		btnPlay.setBounds(100, 550, 38, 38);
+		btnPlay.setBounds(70, 550, 38, 38);
 		btnPlay.addActionListener(e->abspielen());
 		btnPlay.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+			Image img = ImageIO.read(new FileInputStream("images/play.png"));
 		    btnPlay.setIcon(new ImageIcon(img));
 		    btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -224,12 +229,12 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnStop);
-		btnStop.setBounds(150, 550, 38, 38);
+		btnStop.setBounds(120, 550, 38, 38);
 		btnStop.addActionListener(e->stoppen());
 		btnStop.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("icons/stop.png"));
+			Image img = ImageIO.read(new FileInputStream("images/stop.png"));
 			btnStop.setIcon(new ImageIcon(img));
 			btnStop.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -237,12 +242,12 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnNext);
-		btnNext.setBounds(200, 550, 38, 38);
+		btnNext.setBounds(170, 550, 38, 38);
 		btnNext.addActionListener(e->nextTitel());
 		btnNext.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("icons/next.png"));
+			Image img = ImageIO.read(new FileInputStream("images/next.png"));
 			btnNext.setIcon(new ImageIcon(img));
 			btnNext.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -250,37 +255,47 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pBenutzermod.add(btnNewPlaylist);
-		btnNewPlaylist.setBounds(260, 100, 150, 30);
-		btnNewPlaylist.addActionListener(e->{playlist.playlistSpeichern(); stoppen();});
+		btnNewPlaylist.setBounds(230, 100, 150, 30);
+		btnNewPlaylist.addActionListener(e->{stoppen(); playlist.playlistSpeichern();});
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(btnAddToPlaylist);
-		btnAddToPlaylist.setBounds(420, 100, 150, 30);
+		btnAddToPlaylist.setBounds(390, 100, 150, 30);
 		btnAddToPlaylist.addActionListener(e->{stoppen();});
 		btnAddToPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(progBar);
-		progBar.setBounds(50, 600, 800, 30);
+		progBar.setBounds(20, 600, 1000, 30);
 		progBar.setValue(15);
-			
+		
+		pBenutzermod.add(lblBenutzermodus);
+		lblBenutzermodus.setForeground(Color.WHITE);
+		lblBenutzermodus.setBounds(20, 0, 400, 50);
+		lblBenutzermodus.setFont(new Font("", Font.BOLD, 30));
+		
+		pBenutzermod.add(lblImage);
+		lblImage.setForeground(Color.WHITE);
+		lblImage.setBounds(420, 400, 128, 128);
+		lblImage.setIcon(new ImageIcon("images/default.png"));
+		
 		pBenutzermod.add(lblAktTitel);
 		lblAktTitel.setForeground(Color.WHITE);
-		lblAktTitel.setBounds(250, 550, 200, 38);
+		lblAktTitel.setBounds(220, 550, 550, 38);
 		
 		//Verwaltungsmodus-Panel
 		pVerwaltungsmod = new JPanel();
 		pVerwaltungsmod.setLayout(null);
 		pVerwaltungsmod.setVisible(false);
-		pVerwaltungsmod.setBackground(Color.GRAY);
+		pVerwaltungsmod.setBackground(Color.DARK_GRAY);
 		cp.add(pVerwaltungsmod);
 		
 		pVerwaltungsmod.add(btnAddTitel);
-		btnAddTitel.setBounds(780, 200, 38, 38);
+		btnAddTitel.setBounds(20, 390, 38, 38);
 		btnAddTitel.addActionListener(e->neuerTitel());
 		btnAddTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("icons/plus.png"));
+			Image img = ImageIO.read(new FileInputStream("images/plus.png"));
 			btnAddTitel.setIcon(new ImageIcon(img));
 			btnAddTitel.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
@@ -288,28 +303,33 @@ public class MusikGUI extends JFrame {
 		}
 		
 		pVerwaltungsmod.add(btnDelTitel);
-		btnDelTitel.setBounds(780, 260, 38, 38);
+		btnDelTitel.setBounds(70, 390, 38, 38);
 		btnDelTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		try {
-			Image img = ImageIO.read(new FileInputStream("icons/minus.png"));
+			Image img = ImageIO.read(new FileInputStream("images/minus.png"));
 			btnDelTitel.setIcon(new ImageIcon(img));
 			btnDelTitel.setHorizontalTextPosition(SwingConstants.CENTER);
 		} catch (Exception ex) {
 		    System.out.println(ex);
 		}
 		
+		pVerwaltungsmod.add(lblVerwaltungsmodus);
+		lblVerwaltungsmodus.setForeground(Color.WHITE);
+		lblVerwaltungsmodus.setBounds(20, 0, 400, 50);
+		lblVerwaltungsmodus.setFont(new Font("", Font.BOLD, 30));
+		
 		pVerwaltungsmod.add(lblSort);
 		lblSort.setForeground(Color.WHITE);
-		lblSort.setBounds(50, 420, 200, 30);
+		lblSort.setBounds(20, 70, 200, 30);
 		
-		pVerwaltungsmod.add(sortieren);
-		sortieren.setBounds(50, 450, 200, 30);
-		sortieren.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		sortieren.addActionListener(e->Sortieren());
+		pVerwaltungsmod.add(cSortieren);
+		cSortieren.setBounds(20, 100, 200, 30);
+		cSortieren.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cSortieren.addActionListener(e->Sortieren());
 		
 		pVerwaltungsmod.add(scpAlleTitel);
-		scpAlleTitel.setBounds(50, 200, 700, 200);
+		scpAlleTitel.setBounds(20, 150, 1000, 200);
 	}
 	
 	String path = new String();	//nicht optimal
@@ -390,7 +410,7 @@ public class MusikGUI extends JFrame {
 		
 		if(play == false) {
 			try {
-				Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
+				Image img = ImageIO.read(new FileInputStream("images/pause.png"));
 				btnPlay.setIcon(new ImageIcon(img));
 				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
 			} catch (Exception ex) {
@@ -408,13 +428,13 @@ public class MusikGUI extends JFrame {
                 selectedRow = tblPlaylist.getSelectedRow();
             }
             
-            player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 6).toString());
-            lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 1) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 2));
+            player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 5).toString());
+            lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1));
 		}
 		else {
 			if(pause == false) {
 				try {
-					Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+					Image img = ImageIO.read(new FileInputStream("images/play.png"));
 					btnPlay.setIcon(new ImageIcon(img));
 					btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
 				} catch (Exception ex) {
@@ -427,7 +447,7 @@ public class MusikGUI extends JFrame {
 			}
 			else {
 				try {
-					Image img = ImageIO.read(new FileInputStream("icons/pause.png"));
+					Image img = ImageIO.read(new FileInputStream("images/pause.png"));
 					btnPlay.setIcon(new ImageIcon(img));
 					btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
 				} catch (Exception ex) {
@@ -447,7 +467,7 @@ public class MusikGUI extends JFrame {
 		
 		if(play == true) {
 			try {
-				Image img = ImageIO.read(new FileInputStream("icons/play.png"));
+				Image img = ImageIO.read(new FileInputStream("images/play.png"));
 				btnPlay.setIcon(new ImageIcon(img));
 				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
 			} catch (Exception ex) {
@@ -459,7 +479,11 @@ public class MusikGUI extends JFrame {
 			player.musikStoppen();
 		}
 		
-		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));	
+		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));
+		
+		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+		dtmPlaylist.setDataVector(data, columnNames);
+		dtmPlaylist.fireTableDataChanged();
 	}
 	
 	public void previousTitel() {
@@ -515,16 +539,14 @@ public class MusikGUI extends JFrame {
 		
 		int kriterium;
 		
-		switch (sortieren.getSelectedItem().toString()) {
-		case "Nr": 			kriterium = 0;
-				   			break;
-		case "Titel": 		kriterium = 1;
+		switch (cSortieren.getSelectedItem().toString()) {
+		case "Titel": 		kriterium = 0;
 					  		break;
-		case "Interpret": 	kriterium = 2;
+		case "Interpret": 	kriterium = 1;
 						  	break;
-		case "Album": 		kriterium = 3;
+		case "Album": 		kriterium = 2;
 					  		break;
-		case "Genre": 		kriterium = 4;
+		case "Genre": 		kriterium = 3;
 					  		break;
 		default: 			kriterium = 0;
 							break;

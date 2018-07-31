@@ -54,14 +54,9 @@ public class MusikPlaylist {
 		}
 			
 		String[][] data = new String[list.size()][];
-		String helper;
 		
 		for (int i = 0; i < list.size(); i++) {
-			
-			helper = Integer.toString(i+1) + "," + list.get(i).toString();
-			
-			String[] row = list.get(i).replaceFirst(list.get(i).substring(0, list.get(i).length()), helper).split(",");
-		    data[i] = row;
+		    data[i] = list.get(i).split(",");
 		}
 		
 		return data;
