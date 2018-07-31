@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
@@ -187,18 +188,42 @@ public class MusikGUI extends JFrame {
         tblPlaylist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
+            	if(evt.getButton() == 1)
 //                int row = tblPlaylist.rowAtPoint(evt.getPoint());
 //                int col = tblPlaylist.columnAtPoint(evt.getPoint());
                 
-                if (evt.getClickCount() == 1) {
-                    stoppen();
-                }
-                else {
-                	abspielen();
-                }
-
+            		if (evt.getClickCount() == 1) {
+            			stoppen();
+            		}
+            		else {
+            			abspielen();
+            		}
             }
         });
+        
+        tblAlleTitel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+            	if(evt.getButton() == 3)
+					try {
+						delTitel();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}            		
+            }
+            public void mouseReleased(MouseEvent evt)
+            {
+                if (evt.getButton() == 3){
+                    int row = tblAlleTitel.rowAtPoint( evt.getPoint() );
+                    int column = tblAlleTitel.columnAtPoint( evt.getPoint() );
+         
+                    if (! tblAlleTitel.isRowSelected(row))
+                        tblAlleTitel.changeSelection(row, column, false, false);
+                }
+            }
+        });
+        
         tblPlaylist.setAutoCreateRowSorter(true);
 		
 		pBenutzermod.add(scpPlaylist);
@@ -403,6 +428,21 @@ public class MusikGUI extends JFrame {
   	  	  path = fc.getSelectedFile().getAbsolutePath();
   	  	  path = path.replace("\\", "/");
   	  	}
+	}
+	
+	private void delTitel() throws IOException {
+		int row = tblAlleTitel.getSelectedRow();
+		String datenTitel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
+		
+		for (int column = 1; column<tblAlleTitel.getColumnCount(); column++) {
+			datenTitel = datenTitel + "," + tblAlleTitel.getModel().getValueAt(row, column).toString();
+		}
+		System.out.println("- DELETED - " + datenTitel);
+		musikdaten.MusikLoeschen(datenTitel);
+		String titel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
+		String kuenstler = tblAlleTitel.getModel().getValueAt(row, 1).toString();
+		JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht",
+		        JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void bModusAuf() {

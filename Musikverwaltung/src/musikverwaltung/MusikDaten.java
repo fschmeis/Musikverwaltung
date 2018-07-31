@@ -3,7 +3,6 @@ package musikverwaltung;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import javax.swing.JOptionPane;
 
 public class MusikDaten {
@@ -22,5 +21,24 @@ public class MusikDaten {
 			} catch (FileNotFoundException e) {}
 		}
 		
+	}
+
+	public void MusikLoeschen(String datenTitel) throws IOException {
+		File inputFile = new File("playlists/alleLieder.txt");
+		File tempFile = new File("playlists/alleLiederTEMP.txt");
+		BufferedReader br = new BufferedReader(new FileReader(inputFile));
+        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+        String line = null;
+        
+        while ((line = br.readLine()) != null) {
+            if (!line.trim().equals(datenTitel)) {
+                pw.println(line);
+                pw.flush();
+            }
+        }
+        pw.close();
+        br.close();
+        inputFile.delete();
+        tempFile.renameTo(inputFile);
 	}
 }
