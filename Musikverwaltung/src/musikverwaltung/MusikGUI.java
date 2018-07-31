@@ -285,7 +285,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnNewPlaylist);
 		btnNewPlaylist.setBounds(230, 100, 150, 30);
-		btnNewPlaylist.addActionListener(e->{stoppen(); playlist.playlistSpeichern();});
+		btnNewPlaylist.addActionListener(e->{stoppen(); playlist.playlistSpeichern(); cplaylistadd();});
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(btnAddToPlaylist);
@@ -566,4 +566,8 @@ public class MusikGUI extends JFrame {
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
 	}	
+	
+	public void cplaylistadd() {
+		cPlaylist.addItem(playlist.getnew());
+	}
 }

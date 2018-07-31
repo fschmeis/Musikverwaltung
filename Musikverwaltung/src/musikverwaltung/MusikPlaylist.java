@@ -10,10 +10,12 @@ import javax.swing.JOptionPane;
 
 public class MusikPlaylist {
 	
+	String playlistName;
+	
 	public void playlistSpeichern() {
 		
 		ImageIcon icon = new ImageIcon("icons/playlist.png");
-		String playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
+		playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 		
 		if (playlistName != null) {
 			
@@ -85,5 +87,13 @@ public class MusikPlaylist {
 		}
 		
 		return listPlaylists.toArray(new String[0]);
+	}
+
+	public String getnew() {
+		try {
+		return playlistName;
+		} catch( NullPointerException nullp) {
+			return "";
+		}
 	}	
 }
