@@ -493,11 +493,11 @@ public class MusikGUI extends JFrame {
 			player.musikStoppen();
 		}
 		
-		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));
-		
-		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
-		dtmPlaylist.setDataVector(data, columnNames);
-		dtmPlaylist.fireTableDataChanged();
+//		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));
+//		
+//		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+//		dtmPlaylist.setDataVector(data, columnNames);
+//		dtmPlaylist.fireTableDataChanged();
 		
 		timer.stop();
 		progress = 0;
@@ -509,7 +509,7 @@ public class MusikGUI extends JFrame {
 		stoppen();
 		selectedRow--;
 		
-		if(selectedRow < tblPlaylist.getRowCount()) {
+		if(selectedRow < 0) {
 			selectedRow = 0;
 			tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
 		}

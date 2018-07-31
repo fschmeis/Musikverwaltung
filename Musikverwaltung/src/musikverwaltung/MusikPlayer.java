@@ -62,19 +62,19 @@ public class MusikPlayer {
 	                        }     
 	                        
 	                        audioClip.close();
-	                         
+	                        
 	                    } catch (UnsupportedAudioFileException ex) {
-	                        System.out.println("The specified audio file is not supported.");
+	                        System.out.println("Audio Format wird nicht unterstützt.");
 	                        ex.printStackTrace();
 	                    } catch (LineUnavailableException ex) {
-	                        System.out.println("Audio line for playing back is unavailable.");
+	                        System.out.println("Audiospur ist nicht verfügbar.");
 	                        ex.printStackTrace();
 	                    } catch (IOException ex) {
-	                        System.out.println("Error playing the audio file.");
+	                        System.out.println("Fehler beim Abspielen.");
 	                        ex.printStackTrace();
 	                    }
 	                } catch (Exception ex) {
-	                    System.out.println("play sound error: " + ex.getMessage() + " for " + "filename");
+	                    System.out.println("Abspielfehler: " + ex.getMessage() + " für " + pfad);
 	                }
 	            }
 	        }).start();
