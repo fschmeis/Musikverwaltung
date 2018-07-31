@@ -96,10 +96,10 @@ public class MusikGUI extends JFrame {
 	JButton btnAddTitel = new JButton();
 	JButton btnDelTitel = new JButton();
 	
-	JLabel lblSort = new JLabel("Sortieren nach:");
-	
-	String dataSort[] = {"Titel", "Interpret", "Album", "Genre"};
-	JComboBox<String> cSortieren = new JComboBox<String>(dataSort);
+//	JLabel lblSort = new JLabel("Sortieren nach:");
+//	
+//	String dataSort[] = {"Titel", "Interpret", "Album", "Genre"};
+//	JComboBox<String> cSortieren = new JComboBox<String>(dataSort);
 	
 	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
 		@Override
@@ -189,6 +189,7 @@ public class MusikGUI extends JFrame {
 
             }
         });
+        tblPlaylist.setAutoCreateRowSorter(true);
 		
 		pBenutzermod.add(scpPlaylist);
 		scpPlaylist.setBounds(20, 150, 1000, 200);
@@ -319,14 +320,16 @@ public class MusikGUI extends JFrame {
 		lblVerwaltungsmodus.setBounds(20, 0, 400, 50);
 		lblVerwaltungsmodus.setFont(new Font("", Font.BOLD, 30));
 		
-		pVerwaltungsmod.add(lblSort);
-		lblSort.setForeground(Color.WHITE);
-		lblSort.setBounds(20, 70, 200, 30);
+//		pVerwaltungsmod.add(lblSort);
+//		lblSort.setForeground(Color.WHITE);
+//		lblSort.setBounds(20, 70, 200, 30);
+//		
+//		pVerwaltungsmod.add(cSortieren);
+//		cSortieren.setBounds(20, 100, 200, 30);
+//		cSortieren.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//		cSortieren.addActionListener(e->Sortieren());
 		
-		pVerwaltungsmod.add(cSortieren);
-		cSortieren.setBounds(20, 100, 200, 30);
-		cSortieren.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		cSortieren.addActionListener(e->Sortieren());
+		tblAlleTitel.setAutoCreateRowSorter(true);
 		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(20, 150, 1000, 200);
@@ -532,40 +535,40 @@ public class MusikGUI extends JFrame {
 		dtmPlaylist.fireTableDataChanged();
 	}
 	
-	public void Sortieren() {
-		
-		int i;
-		String[] h;
-		
-		int kriterium;
-		
-		switch (cSortieren.getSelectedItem().toString()) {
-		case "Titel": 		kriterium = 0;
-					  		break;
-		case "Interpret": 	kriterium = 1;
-						  	break;
-		case "Album": 		kriterium = 2;
-					  		break;
-		case "Genre": 		kriterium = 3;
-					  		break;
-		default: 			kriterium = 0;
-							break;
-		}
-		
-		i = data.length - 1;
-		
-		for(int j = 0; j <= i - 1; j++) {
-			for(int k = j + 1; k <= i; k++) {
-				if(data[j][kriterium].compareTo(data[k][kriterium]) > 0) {
-					h = data[j];
-					data[j] = data[k];
-					data[k] = h;
-				}
-			}
-		}
-		dtmAlleTitel.setDataVector(data, columnNames);
-		dtmAlleTitel.fireTableDataChanged();
-		
-	}
-	
+//	public void Sortieren() {
+//		
+//		int i;
+//		String[] h;
+//		
+//		int kriterium;
+//		
+//		switch (cSortieren.getSelectedItem().toString()) {
+//		case "Titel": 		kriterium = 0;
+//					  		break;
+//		case "Interpret": 	kriterium = 1;
+//						  	break;
+//		case "Album": 		kriterium = 2;
+//					  		break;
+//		case "Genre": 		kriterium = 3;
+//					  		break;
+//		default: 			kriterium = 0;
+//							break;
+//		}
+//		
+//		i = data.length - 1;
+//		
+//		for(int j = 0; j <= i - 1; j++) {
+//			for(int k = j + 1; k <= i; k++) {
+//				if(data[j][kriterium].compareTo(data[k][kriterium]) > 0) {
+//					h = data[j];
+//					data[j] = data[k];
+//					data[k] = h;
+//				}
+//			}
+//		}
+//		dtmAlleTitel.setDataVector(data, columnNames);
+//		dtmAlleTitel.fireTableDataChanged();
+//		
+//	}
+
 }
