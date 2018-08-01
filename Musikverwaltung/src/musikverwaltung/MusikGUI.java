@@ -37,6 +37,7 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 
 public class MusikGUI extends JFrame {
@@ -106,6 +107,8 @@ public class MusikGUI extends JFrame {
 	
 	JTable tblAlleTitel = new JTable(dtmAlleTitel);
 	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
+	TableColumnModel tcmV = tblAlleTitel.getColumnModel(); //zum Ausblenden von Spalten
+	TableColumnModel tcmB = tblPlaylist.getColumnModel(); //zum Ausblenden von Spalten
 	
 	ActionListener progressor = new ActionListener () {
     	public void actionPerformed(ActionEvent evt) {
@@ -221,7 +224,11 @@ public class MusikGUI extends JFrame {
             }
         });
         
+        
         tblPlaylist.setAutoCreateRowSorter(true);
+        tblAlleTitel.getTableHeader().setReorderingAllowed(false);
+        tblPlaylist.getTableHeader().setReorderingAllowed(false);
+    	tcmB.removeColumn(tcmB.getColumn(5));
 		
 		pBenutzermod.add(scpPlaylist);
 		scpPlaylist.setBounds(20, 150, 1000, 200);
@@ -349,6 +356,7 @@ public class MusikGUI extends JFrame {
 		
 		tblAlleTitel.setAutoCreateRowSorter(true);
 		
+		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(20, 150, 1000, 200);
 	}
@@ -404,6 +412,7 @@ public class MusikGUI extends JFrame {
 }
 	
 	private void optPfad() {
+		
 		JButton open = new JButton();
   	  	JFileChooser fc = new JFileChooser();
   	  	FileNameExtensionFilter filter = new FileNameExtensionFilter(".wav", "wav");
@@ -417,29 +426,17 @@ public class MusikGUI extends JFrame {
 	}
 	
 	private void delTitel() throws IOException {
+		
 		int row = tblAlleTitel.getSelectedRow();
 		String datenTitel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
-		
 		for (int column = 1; column<tblAlleTitel.getColumnCount(); column++) {
 			datenTitel = datenTitel + "," + tblAlleTitel.getModel().getValueAt(row, column).toString();
 		}
 		
-		File deleteFile = new File(tblAlleTitel.getModel().getValueAt(row, 5).toString());
-		
-		if(deleteFile.exists()) {
-			deleteFile.delete();
-		}
-		
-//		System.out.println("- DELETED - " + datenTitel);
-		musikdaten.MusikLoeschen(datenTitel);
-		
 		String titel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
 		String kuenstler = tblAlleTitel.getModel().getValueAt(row, 1).toString();
-		JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE);
 		
-		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
-		dtmPlaylist.setDataVector(data, columnNames);
-		dtmPlaylist.fireTableDataChanged();
+		int result = JOptionPane.showConfirmDialog(new JPanel(), titel + " von " + kuenstler, "Titel löschen?", JOptionPane.YES_NO_OPTION);
 		
 		data = playlist.playlistLesen("alleLieder");
 		dtmAlleTitel.setDataVector(data, columnNames);
