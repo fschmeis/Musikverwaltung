@@ -16,7 +16,7 @@ public class MusikPlaylist {
 		
 		ImageIcon icon = new ImageIcon("icons/playlist.png");
 		playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
-		
+
 		if (playlistName != null) {
 			
 			if (playlistName.equals("")) {
@@ -36,7 +36,15 @@ public class MusikPlaylist {
 		
 	}
 	
-	public void playlistLoeschen() {}
+	public void playlistLoeschen(String strPlayList){
+		File inputFile = new File("playlist/" + strPlayList + ".txt");
+		if (inputFile.delete()) {
+			JOptionPane.showMessageDialog(null, "Playlist wurde erfolgreich gelöscht", "", JOptionPane.WARNING_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Fehler aufgetreten, konnte nicht gelöscht werden", "", JOptionPane.WARNING_MESSAGE);
+		}
+		
+	}
 	
 	public String[][] playlistLesen(String strPlaylist) {
 		
@@ -95,5 +103,5 @@ public class MusikPlaylist {
 		} catch( NullPointerException nullp) {
 			return "";
 		}
-	}	
+	}
 }

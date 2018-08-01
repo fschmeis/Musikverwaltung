@@ -67,6 +67,7 @@ public class MusikGUI extends JFrame {
 	JButton btnNext = new JButton();
 	JButton btnNewPlaylist = new JButton("Neue Playlist");
 	JButton btnAddToPlaylist = new JButton("Titel hinzufügen");
+	JButton btnDeletePlaylist = new JButton("Playlist löschen");
 	
 	JProgressBar progBar = new JProgressBar();
 	
@@ -200,7 +201,6 @@ public class MusikGUI extends JFrame {
 					try {
 						delTitel();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}            		
             }
@@ -292,6 +292,11 @@ public class MusikGUI extends JFrame {
 		btnAddToPlaylist.setBounds(390, 100, 150, 30);
 		btnAddToPlaylist.addActionListener(e->{stoppen();});
 		btnAddToPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
+		
+		pBenutzermod.add(btnDeletePlaylist);
+		btnDeletePlaylist.setBounds(550, 100, 150, 30);
+		btnDeletePlaylist.addActionListener(e->{playlistloeschen();});
+		btnDeletePlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 				
 		pBenutzermod.add(progBar);
 		progBar.setBounds(20, 600, 1000, 30);
@@ -569,5 +574,15 @@ public class MusikGUI extends JFrame {
 	
 	public void cplaylistadd() {
 		cPlaylist.addItem(playlist.getnew());
+	}
+	
+	public void playlistloeschen(){
+		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
+			JOptionPane.showMessageDialog(null, "Kann nicht gelöscht werden", "", JOptionPane.WARNING_MESSAGE);
+		} else {
+			cPlaylist.removeItem(cPlaylist.getSelectedItem());
+			playlist.playlistLoeschen((String) cPlaylist.getSelectedItem());
+	
+		}
 	}
 }

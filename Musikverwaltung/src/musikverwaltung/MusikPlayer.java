@@ -126,5 +126,6 @@ public class MusikPlayer {
 			return 100;
 		}
 		}
+
 	
 }
