@@ -596,10 +596,10 @@ public class MusikGUI extends JFrame {
 	public void playlistloeschen(){
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
 			JOptionPane.showMessageDialog(null, "Kann nicht gelöscht werden", "", JOptionPane.WARNING_MESSAGE);
-		} else {
-			cPlaylist.removeItem(cPlaylist.getSelectedItem());
+		}
+		else {
 			playlist.playlistLoeschen((String) cPlaylist.getSelectedItem());
-	
+			cPlaylist.removeItem(cPlaylist.getSelectedItem());
 		}
 	}
 }

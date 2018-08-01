@@ -36,14 +36,15 @@ public class MusikPlaylist {
 		
 	}
 	
-	public void playlistLoeschen(String strPlayList){
-		File inputFile = new File("playlist/" + strPlayList + ".txt");
+	public void playlistLoeschen(String delPlayList) {
+		
+		File inputFile = new File("playlists/" + delPlayList + ".txt");
+		
 		if (inputFile.delete()) {
 			JOptionPane.showMessageDialog(null, "Playlist wurde erfolgreich gelöscht", "", JOptionPane.WARNING_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(null, "Fehler aufgetreten, konnte nicht gelöscht werden", "", JOptionPane.WARNING_MESSAGE);
 		}
-		
 	}
 	
 	public String[][] playlistLesen(String strPlaylist) {
