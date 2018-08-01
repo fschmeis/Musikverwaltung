@@ -158,7 +158,7 @@ public class MusikGUI extends JFrame {
 		bModusItem = new JMenuItem("Benutzermodus");
 		bModusItem.addActionListener(e->bModusAuf());
 		vModusItem = new JMenuItem("Verwaltungsmodus");
-		vModusItem.addActionListener(e->vModusAuf());
+		vModusItem.addActionListener(e->{vModusAuf(); stoppen();});
 		
 		dateimenu.add(beendenItem);
 		modusmenu.add(bModusItem);
