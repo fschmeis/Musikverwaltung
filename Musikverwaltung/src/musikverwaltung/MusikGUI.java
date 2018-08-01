@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -107,10 +108,14 @@ public class MusikGUI extends JFrame {
 	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
 	
 	ActionListener progressor = new ActionListener () {
-    	public void actionPerformed(ActionEvent evnt) {
+    	public void actionPerformed(ActionEvent evt) {
     		progress++;
     		progBar.setValue(progress);
     		progBar.setMaximum(player.getduration());
+    		
+    		if(progress == progBar.getMaximum()) {
+    			nextTitel();
+    		}
     	}
     };
     Timer timer = new Timer(1000, progressor);
@@ -301,7 +306,7 @@ public class MusikGUI extends JFrame {
 		pBenutzermod.add(progBar);
 		progBar.setBounds(20, 600, 1000, 30);
 		progBar.setValue(progress);
-		progBar.setBorderPainted(true);		
+		progBar.setBorderPainted(true);
 		
 		pBenutzermod.add(lblBenutzermodus);
 		lblBenutzermodus.setForeground(Color.WHITE);
@@ -394,7 +399,6 @@ public class MusikGUI extends JFrame {
 	      }
 	      
 	      data = playlist.playlistLesen("alleLieder");
-			
 	      dtmAlleTitel.setDataVector(data, columnNames);
 	      dtmAlleTitel.fireTableDataChanged();
 }
@@ -419,12 +423,27 @@ public class MusikGUI extends JFrame {
 		for (int column = 1; column<tblAlleTitel.getColumnCount(); column++) {
 			datenTitel = datenTitel + "," + tblAlleTitel.getModel().getValueAt(row, column).toString();
 		}
-		System.out.println("- DELETED - " + datenTitel);
+		
+		File deleteFile = new File(tblAlleTitel.getModel().getValueAt(row, 5).toString());
+		
+		if(deleteFile.exists()) {
+			deleteFile.delete();
+		}
+		
+//		System.out.println("- DELETED - " + datenTitel);
 		musikdaten.MusikLoeschen(datenTitel);
+		
 		String titel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
 		String kuenstler = tblAlleTitel.getModel().getValueAt(row, 1).toString();
-		JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht",
-		        JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE);
+		
+		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+		dtmPlaylist.setDataVector(data, columnNames);
+		dtmPlaylist.fireTableDataChanged();
+		
+		data = playlist.playlistLesen("alleLieder");
+		dtmAlleTitel.setDataVector(data, columnNames);
+		dtmAlleTitel.fireTableDataChanged();
 	}
 
 	public void bModusAuf() {
@@ -458,8 +477,7 @@ public class MusikGUI extends JFrame {
             else {
                 selectedRow = tblPlaylist.getSelectedRow();
             }
-            
-                 
+               
             player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 5).toString());
             lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1)); 
             
@@ -523,7 +541,7 @@ public class MusikGUI extends JFrame {
 		
 		timer.stop();
 		progress = 0;
-		progBar.setValue(0);
+		progBar.setValue(progress);
 	}
 	
 	public void previousTitel() {
@@ -567,7 +585,6 @@ public class MusikGUI extends JFrame {
 		cPlaylist.setSelectedIndex(selectedPlaylist);
 		
 		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
-		
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
 	}	

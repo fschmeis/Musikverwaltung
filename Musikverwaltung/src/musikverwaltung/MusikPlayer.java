@@ -53,7 +53,7 @@ public class MusikPlayer {
 	                        while (duration > 0) {
 	                            
 	                            try {
-	                                Thread.sleep(1000);
+	                                Thread.sleep(100000);
 	                            } catch (InterruptedException ex) {
 	                                ex.printStackTrace();
 	                            }
@@ -102,7 +102,7 @@ public class MusikPlayer {
                 	while (duration > 0) {
                 
                 		try {
-                			Thread.sleep(1000);
+                			Thread.sleep(100000);
                 		} catch (InterruptedException ex) {
                 			ex.printStackTrace();
                 		}
@@ -121,11 +121,11 @@ public class MusikPlayer {
 
 	public int getduration() {
 		try {
-		return ((int) audioClip.getMicrosecondLength()) / 1_000_000;
+			return ((int) audioClip.getMicrosecondLength()) / 1_000_000;
 		} catch(NullPointerException er) {
 			return 100;
 		}
-		}
+	}
 
 	
 }
