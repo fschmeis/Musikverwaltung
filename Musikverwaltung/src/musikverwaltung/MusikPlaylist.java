@@ -1,7 +1,11 @@
 package musikverwaltung;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -104,5 +108,23 @@ public class MusikPlaylist {
 		} catch( NullPointerException nullp) {
 			return "";
 		}
+	}
+	
+public static void addToPlaylist(String Playlist, String Lied, int nummer) throws IOException{
+		
+		File alleTitel = new File("playlists/alleLieder.txt");
+		BufferedReader br = new BufferedReader(new FileReader(alleTitel));
+		String Zeile = null; 
+		
+		for(int i = 1; i <= nummer + 1; i++) {
+			Zeile=br.readLine();
+		}
+		
+		File actualPlaylist = new File("playlists/" + Playlist + ".txt");
+
+		PrintWriter pw = new PrintWriter(new FileOutputStream(actualPlaylist,true));
+		pw.append("\n" + Zeile);
+		pw.close();
+		
 	}
 }

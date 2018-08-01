@@ -114,6 +114,8 @@ public class MusikGUI extends JFrame {
     		progBar.setValue(progress);
     		progBar.setMaximum(player.getduration());
     		
+    		progBar.setString(progTime(progress) + " / " + progTime(progBar.getMaximum()));
+    		
     		if(progress == progBar.getMaximum()) {
     			nextTitel();
     		}
@@ -300,7 +302,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnAddToPlaylist);
 		btnAddToPlaylist.setBounds(390, 100, 150, 30);
-		btnAddToPlaylist.addActionListener(e->{stoppen();});
+		btnAddToPlaylist.addActionListener(e->{stoppen(); addToPlaylist();});
 		btnAddToPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(btnDeletePlaylist);
@@ -312,6 +314,8 @@ public class MusikGUI extends JFrame {
 		progBar.setBounds(20, 600, 1000, 30);
 		progBar.setValue(progress);
 		progBar.setBorderPainted(true);
+		progBar.setStringPainted(true);
+		progBar.setString("00.00 / 00.00");
 		
 		pBenutzermod.add(lblBenutzermodus);
 		lblBenutzermodus.setForeground(Color.WHITE);
@@ -537,6 +541,7 @@ public class MusikGUI extends JFrame {
 		timer.stop();
 		progress = 0;
 		progBar.setValue(progress);
+		progBar.setString("00.00 / 00.00");
 	}
 	
 	public void previousTitel() {
@@ -598,4 +603,68 @@ public class MusikGUI extends JFrame {
 			cPlaylist.removeItem(cPlaylist.getSelectedItem());
 		}
 	}
+	
+	public void addToPlaylist(){
+		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
+			JOptionPane.showMessageDialog(null, "Playlist enthält bereits alle Titel.", "", JOptionPane.WARNING_MESSAGE);
+		} else {
+		JPanel pNeuePlaylist = new JPanel();
+
+	    JButton btnPfad = new JButton("...");
+	    
+	    data = playlist.playlistLesen("alleLieder");
+	    String[] strTitel = new String[data.length];
+	    for(int i = 0; i < data.length; i++) {
+	    	strTitel[i] = data[i][0];
+	    }
+	      
+	    int nummer = 0;
+	    JComboBox cTitelListe = new JComboBox(strTitel);
+	    pNeuePlaylist.add(cTitelListe);
+	    int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+	    if (result == JOptionPane.OK_OPTION) {
+	    	for(int i = 0; i < data.length; i++) {
+	    		if(data[i][0].equals((String)cTitelListe.getSelectedItem())) {
+	    			nummer = i;
+	    		}
+	    	}
+	    	 
+	    	try {
+				MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cTitelListe.getSelectedItem(), nummer);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	     }
+	    int selectedPlaylist = cPlaylist.getSelectedIndex();
+
+		cPlaylist.setSelectedIndex(selectedPlaylist);
+	    data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+
+	    dtmAlleTitel.setDataVector(data, columnNames);
+	    dtmAlleTitel.fireTableDataChanged();
+		}
+	}
+	
+	public String progTime(int time) {
+		int progTimeSec, progTimeMin = 0;
+		String Min, Sec = "00";
+		
+		progTimeSec = time % 60;
+		progTimeMin = time / 60;
+		
+		if(progTimeSec < 10) {
+			Sec = ("0" + progTimeSec);
+		} else {
+			Sec = Integer.toString(progTimeSec);
+		}
+		
+		if(progTimeMin < 10) {
+			Min = ("0" + progTimeMin);
+		} else {
+			Min = Integer.toString(progTimeMin);
+		}
+		return (Min + "." + Sec);
+	}
+	
 }
