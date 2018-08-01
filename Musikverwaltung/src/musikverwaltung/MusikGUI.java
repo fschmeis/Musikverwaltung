@@ -107,8 +107,6 @@ public class MusikGUI extends JFrame {
 	
 	JTable tblAlleTitel = new JTable(dtmAlleTitel);
 	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
-	TableColumnModel tcmV = tblAlleTitel.getColumnModel(); //zum Ausblenden von Spalten
-	TableColumnModel tcmB = tblPlaylist.getColumnModel(); //zum Ausblenden von Spalten
 	
 	ActionListener progressor = new ActionListener () {
     	public void actionPerformed(ActionEvent evt) {
@@ -226,9 +224,9 @@ public class MusikGUI extends JFrame {
         
         
         tblPlaylist.setAutoCreateRowSorter(true);
+        
         tblAlleTitel.getTableHeader().setReorderingAllowed(false);
         tblPlaylist.getTableHeader().setReorderingAllowed(false);
-    	tcmB.removeColumn(tcmB.getColumn(5));
 		
 		pBenutzermod.add(scpPlaylist);
 		scpPlaylist.setBounds(20, 150, 1000, 200);
