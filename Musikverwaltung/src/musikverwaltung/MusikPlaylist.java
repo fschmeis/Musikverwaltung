@@ -52,8 +52,7 @@ public class MusikPlaylist {
 					try {
 						file.createNewFile();
 						return 1;
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 						e.printStackTrace();
 						return 0;
 					}
@@ -104,8 +103,7 @@ public class MusikPlaylist {
 			}
 			
 			s.close();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 			
@@ -154,8 +152,7 @@ public class MusikPlaylist {
 	public String getnew() {
 		try {
 			return playlistName;
-		}
-		catch(NullPointerException ex) {
+		} catch(NullPointerException ex) {
 			return "alleLieder";
 		}
 	}

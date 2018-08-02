@@ -97,7 +97,7 @@ public class MusikGUI extends JFrame {
 	//------------------------------------------Verwaltungsmodus-Komponenten--------------------------------------------------------
 	JLabel lblVerwaltungsmodus = new JLabel("Verwaltungsmodus");
 	
-	JButton btnAddTitel = new JButton();
+	JButton btnAddTitel = new JButton("Titel hinzufügen");
 	JLabel lblImage2 = new JLabel();
 	
 	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
@@ -126,7 +126,7 @@ public class MusikGUI extends JFrame {
     };
     Timer timer = new Timer(1000, progressor);
 		
-	//sonst. Variablen	
+	//sonstige Variablen	
 	boolean play = false;
 	boolean pause = false;
 	int selectedRow = 0;
@@ -342,17 +342,9 @@ public class MusikGUI extends JFrame {
 		cp.add(pVerwaltungsmod);
 		
 		pVerwaltungsmod.add(btnAddTitel);
-		btnAddTitel.setBounds(20, 390, 38, 38);
+		btnAddTitel.setBounds(20, 100, 150, 30);
 		btnAddTitel.addActionListener(e->neuerTitel());
 		btnAddTitel.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
-		
-		try {
-			Image img = ImageIO.read(new FileInputStream("images/plus.png"));
-			btnAddTitel.setIcon(new ImageIcon(img));
-			btnAddTitel.setHorizontalTextPosition(SwingConstants.CENTER);
-		} catch (Exception ex) {
-		    System.out.println(ex);
-		}
 				
 		pVerwaltungsmod.add(lblVerwaltungsmodus);
 		lblVerwaltungsmodus.setForeground(Color.WHITE);
