@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 public class MusikDaten {
 	
+	MusikPlaylist playlist = new MusikPlaylist();	
 	/**
 	 * speichert Informationen zu einem neuen Lied in der Übersicht und der Datei mit allen Lieder
 	 * 
@@ -34,29 +35,31 @@ public class MusikDaten {
 	}
 	
 	/**
-	 * löscht das durch Rechtsklick ausgewählte Lied aus der Datei mit allen Liedern
+	 * löscht das durch Rechtsklick ausgewählte Lied aus den Playlisten
 	 * 
 	 * @param datenTitel
 	 * @throws IOException
 	 */
 	public void musikLoeschen(String datenTitel) throws IOException {
 		
-		File inputFile = new File("playlists/alleLieder.txt");
-		File tempFile = new File("playlists/alleLiederTEMP.txt");
-		BufferedReader br = new BufferedReader(new FileReader(inputFile));
-        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
-        String line = null;
-        
-        while ((line = br.readLine()) != null) {
-            if (!line.trim().equals(datenTitel)) {
-                pw.println(line);
-                pw.flush();
-            }
-        }
-        
-        pw.close();
-        br.close();
-        inputFile.delete();
-        tempFile.renameTo(inputFile);
+		for (int i=0; i<playlist.allePlaylists().length; i++) {
+			File inputFile = new File("playlists/" + playlist.allePlaylists()[i] + ".txt");
+			File tempFile = new File("playlists/" + playlist.allePlaylists()[i] + "TEMP.txt");
+			BufferedReader br = new BufferedReader(new FileReader(inputFile));
+	        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+	        String line = null;
+	        
+	        while ((line = br.readLine()) != null) {
+	            if (!line.trim().equals(datenTitel)) {
+	                pw.println(line);
+	                pw.flush();
+	            }
+	        }
+	        
+	        pw.close();
+	        br.close();
+	        inputFile.delete();
+	        tempFile.renameTo(inputFile);
+		}
 	}
 }
