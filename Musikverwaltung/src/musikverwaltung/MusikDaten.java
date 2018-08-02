@@ -41,25 +41,46 @@ public class MusikDaten {
 	 * @throws IOException
 	 */
 	public void musikLoeschen(String datenTitel) throws IOException {
-		
-		for (int i=0; i<playlist.allePlaylists().length; i++) {
-			File inputFile = new File("playlists/" + playlist.allePlaylists()[i] + ".txt");
-			File tempFile = new File("playlists/" + playlist.allePlaylists()[i] + "TEMP.txt");
-			BufferedReader br = new BufferedReader(new FileReader(inputFile));
-	        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
-	        String line = null;
-	        
-	        while ((line = br.readLine()) != null) {
-	            if (!line.trim().equals(datenTitel)) {
-	                pw.println(line);
-	                pw.flush();
-	            }
-	        }
-	        
-	        pw.close();
-	        br.close();
-	        inputFile.delete();
-	        tempFile.renameTo(inputFile);
-		}
+		File inputFile = new File("playlists/alleLieder.txt");
+		File tempFile = new File("playlists/alleLiederTEMP.txt");
+		BufferedReader br = new BufferedReader(new FileReader(inputFile));
+        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+        String line = null;
+        
+        while ((line = br.readLine()) != null) {
+            if (!line.trim().equals(datenTitel)) {
+                pw.println(line);
+                pw.flush();
+            }
+        }
+        
+        pw.close();
+        br.close();
+        inputFile.delete();
+        tempFile.renameTo(inputFile);
+//        
+//		String strFilename = "";
+//		File folder = new File("playlists/");
+//		File[] listOfFiles = folder.listFiles();
+//		for(int i = 0; i < listOfFiles.length; i++) {
+//			System.out.println();
+//			File inputFile = new File("playlists/" + listOfFiles[i].getName());
+//			File tempFile = new File("playlists/TEMP" + listOfFiles[i].getName());
+//			BufferedReader br = new BufferedReader(new FileReader(inputFile));
+//	        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+//	        String line = null;
+//	        
+//	        while ((line = br.readLine()) != null) {
+//	            if (!line.trim().equals(datenTitel)) {
+//	                pw.println(line);
+//	                pw.flush();
+//	            }
+//	        }
+//	        
+//	        pw.close();
+//	        br.close();
+//	        inputFile.delete();
+//	        tempFile.renameTo(inputFile);
+//		}
 	}
 }
