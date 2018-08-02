@@ -188,8 +188,9 @@ public class MusikGUI extends JFrame {
 		tblAlleTitel.setShowHorizontalLines(false);
 		
 		//Farbe der ausgewählten Reihe
-		tblPlaylist.setSelectionBackground(Color.ORANGE);
-		tblAlleTitel.setSelectionBackground(Color.ORANGE);
+		Color customBlue = new Color(111,169,189);
+		tblPlaylist.setSelectionBackground(customBlue);
+		tblAlleTitel.setSelectionBackground(customBlue);
 		
 		//Mouse-Listener tblPlaylist - spielt das durch Doppelklick ausgewählte Lied ab
         tblPlaylist.addMouseListener(new MouseAdapter() {
@@ -410,7 +411,8 @@ public class MusikGUI extends JFrame {
 	      
 	      btnPfad.addActionListener(e->getPfad());
 	      
-	      int result = JOptionPane.showConfirmDialog(null, pNeuerTitel, "Neuen Titel hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+	      ImageIcon icon = new ImageIcon("images/playlist.png");
+	      int result = JOptionPane.showConfirmDialog(null, pNeuerTitel, "Neuen Titel hinzufügen:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
 	      
 	      if (result == JOptionPane.OK_OPTION) {
 	    	  musikdaten.musikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
@@ -458,11 +460,13 @@ public class MusikGUI extends JFrame {
 		String titel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
 		String kuenstler = tblAlleTitel.getModel().getValueAt(row, 1).toString();
 		
-		int result = JOptionPane.showConfirmDialog(new JPanel(), titel + " von " + kuenstler, "Titel löschen?", JOptionPane.YES_NO_OPTION);
+		ImageIcon icon = new ImageIcon("images/speaker.png");
+		int result = JOptionPane.showConfirmDialog(new JPanel(), titel + " von " + kuenstler, "Titel löschen?",
+				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
 		
 		if(result == 0) {
 			musikdaten.musikLoeschen(datenTitel);
-			JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE, icon);
 		}
 		
 		//aktualisiert die Tabellen
@@ -672,17 +676,20 @@ public class MusikGUI extends JFrame {
 	 */
 	public void playlistSpeichern() {
 		
-		JPanel pNeuePlaylist = new JPanel();	
-		JLabel lTitel = new JLabel("Leere Playlist oder vordefiniert?");
+		JPanel pNeuePlaylist = new JPanel();
+		
+		JLabel lTitel = new JLabel("Voreinstellung:     ");
+		
 		String[] strAuswahl = {"Leer", "Interpret", "Album", "Genre", "Datum"};
 		JComboBox cAuswahl = new JComboBox(strAuswahl);
 		
 		pNeuePlaylist.add(lTitel);
 		pNeuePlaylist.add(cAuswahl);
 		
-		int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Neue Playlist erstellen:", JOptionPane.OK_CANCEL_OPTION);
 		
-		//Auswahl zwischen leerer oder vordefinierter Playlist 
+		ImageIcon icon = new ImageIcon("images/speaker.png");
+		int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Neue Playlist erstellen:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
+		
 		if(result == JOptionPane.OK_OPTION) {
 			switch ((String)cAuswahl.getSelectedItem()) {
 			
@@ -755,7 +762,9 @@ public class MusikGUI extends JFrame {
 			
 			pAddToPlaylist.add(cKritListe);
 			
-			int result = JOptionPane.showConfirmDialog (null, pAddToPlaylist, "Auswahl des " + krit + "s :", JOptionPane.OK_CANCEL_OPTION);
+			ImageIcon icon = new ImageIcon("images/speaker.png");
+			int result = JOptionPane.showConfirmDialog (null, pAddToPlaylist, "Auswahl des " + krit + "s :", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE, icon);
 			
 			//Titel werden hinzugefügt
 			if(result == JOptionPane.OK_OPTION) {
@@ -817,7 +826,9 @@ public class MusikGUI extends JFrame {
 			
 			pAddToPlaylist.add(cTitelListe);
 			
-			int result = JOptionPane.showConfirmDialog(null, pAddToPlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+			ImageIcon icon = new ImageIcon("images/speaker.png");
+			int result = JOptionPane.showConfirmDialog(null, pAddToPlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE, icon);
 			
 			//Titel hinzufügen
 			if (result == JOptionPane.OK_OPTION) {
