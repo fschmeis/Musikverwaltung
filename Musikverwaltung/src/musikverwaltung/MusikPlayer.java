@@ -22,6 +22,11 @@ public class MusikPlayer {
 	AudioFormat audioFormat;
 	long duration;
 	
+	/**
+	 * 
+	 * @param pfad
+	 * @return
+	 */
 	public int musikVorbereiten(String pfad) {
 		try {
         	audioFilePath = pfad;
@@ -60,6 +65,11 @@ public class MusikPlayer {
         }
 	}
 	
+	/**
+	 * 
+	 * @param pfad
+	 * @return
+	 */
 	public int musikAbspielen(String pfad) {
 		
 		if(musikVorbereiten(pfad) == 1) {
@@ -91,7 +101,9 @@ public class MusikPlayer {
 			
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public void musikStoppen() {
 		try {
 			audioClip.stop();
@@ -102,7 +114,9 @@ public class MusikPlayer {
 		
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public void musikWeiterspielen() {
 		
 		new Thread(new Runnable() {
@@ -129,7 +143,11 @@ public class MusikPlayer {
             }
         }).start();
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getduration() {
 		
 		try {

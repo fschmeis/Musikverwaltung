@@ -16,6 +16,10 @@ public class MusikPlaylist {
 	
 	String playlistName;
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public int speichernLeer() {
 		
 		boolean bereitsVorhanden = false;
@@ -66,6 +70,10 @@ public class MusikPlaylist {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param delPlayList
+	 */
 	public void loeschen(String delPlayList) {
 		
 		File inputFile = new File("playlists/" + delPlayList + ".txt");
@@ -78,6 +86,11 @@ public class MusikPlaylist {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param strPlaylist
+	 * @return
+	 */
 	public String[][] lesen(String strPlaylist) {
 		
 		File fPlaylist = new File("playlists/" + strPlaylist + ".txt");
@@ -105,6 +118,10 @@ public class MusikPlaylist {
 		return data;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String[] allePlaylists() {
 		
 		ArrayList<String> listPlaylists = new ArrayList<String>();
@@ -129,7 +146,11 @@ public class MusikPlaylist {
 		
 		return listPlaylists.toArray(new String[0]);
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getnew() {
 		try {
 			return playlistName;
@@ -139,6 +160,13 @@ public class MusikPlaylist {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param Playlist
+	 * @param Lied
+	 * @param nummer
+	 * @throws IOException
+	 */
 	public static void addToPlaylist(String Playlist, String Lied, int nummer) throws IOException {
 		
 		File alleTitel = new File("playlists/alleLieder.txt");

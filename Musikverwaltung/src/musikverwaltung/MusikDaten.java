@@ -6,6 +6,15 @@ import java.util.Calendar;
 import javax.swing.JOptionPane;
 
 public class MusikDaten {
+	
+	/**
+	 * 
+	 * @param titel
+	 * @param interpret
+	 * @param album
+	 * @param genre
+	 * @param path
+	 */
 	public void musikSpeichern(String titel, String interpret, String album, Object genre, String path) {
 		
 		if (titel.equals("") || interpret.equals("") || album.equals("") ||genre.equals("Auswählen...")) {
@@ -23,7 +32,12 @@ public class MusikDaten {
 		}
 		
 	}
-
+	
+	/**
+	 * 
+	 * @param datenTitel
+	 * @throws IOException
+	 */
 	public void musikLoeschen(String datenTitel) throws IOException {
 		
 		File inputFile = new File("playlists/alleLieder.txt");

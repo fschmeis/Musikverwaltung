@@ -372,6 +372,9 @@ public class MusikGUI extends JFrame {
 	
 	String path = new String();
 	
+	/**
+	 * 
+	 */
 	private void neuerTitel() {
 		JPanel pNeuerTitel = new JPanel();
 		JTextField tfTitel = new JTextField(8);
@@ -419,8 +422,11 @@ public class MusikGUI extends JFrame {
 	      data = playlist.lesen("alleLieder");
 	      dtmAlleTitel.setDataVector(data, columnNames);
 	      dtmAlleTitel.fireTableDataChanged();
-}
+	}
 	
+	/**
+	 * 
+	 */
 	private void optPfad() {
 		
 		JButton open = new JButton();
@@ -437,6 +443,10 @@ public class MusikGUI extends JFrame {
   	  	}
 	}
 	
+	/**
+	 * 
+	 * @throws IOException
+	 */
 	private void delTitel() throws IOException {
 		
 		int row = tblAlleTitel.getSelectedRow();
@@ -464,17 +474,26 @@ public class MusikGUI extends JFrame {
 		dtmAlleTitel.setDataVector(data, columnNames);
 		dtmAlleTitel.fireTableDataChanged();
 	}
-
+	
+	/**
+	 * 
+	 */
 	public void bModusAuf() {
 		pBenutzermod.setVisible(true);
 		pVerwaltungsmod.setVisible(false);
 	}
 	
+	/**
+	 * 
+	 */
 	public void vModusAuf() {
 		pBenutzermod.setVisible(false);
 		pVerwaltungsmod.setVisible(true);
 	}
-
+	
+	/**
+	 * 
+	 */
 	public void abspielen() {
 		
 		if(play == false) {
@@ -541,7 +560,9 @@ public class MusikGUI extends JFrame {
 		
 	}
 
-
+	/**
+	 * 
+	 */
 	public void stoppen() {
 		
 		if(play == true) {
@@ -565,6 +586,9 @@ public class MusikGUI extends JFrame {
 		progBar.setString("00:00 / 00:00");
 	}
 	
+	/**
+	 * 
+	 */
 	public void previousTitel() {
 		stoppen();
 		selectedRow--;
@@ -581,6 +605,9 @@ public class MusikGUI extends JFrame {
 		abspielen();
 	}
 	
+	/**
+	 * 
+	 */
 	public void nextTitel() {
 		stoppen();
 		
@@ -597,6 +624,9 @@ public class MusikGUI extends JFrame {
 		abspielen();
 	}
 	
+	/**
+	 * 
+	 */
 	public void playlistWechseln() {
 		
 		int selectedPlaylist = cPlaylist.getSelectedIndex();
@@ -608,8 +638,12 @@ public class MusikGUI extends JFrame {
 		data = playlist.lesen(cPlaylist.getSelectedItem().toString());
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
-	}	
+	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public int cplaylistadd() {
 		if(playlist.speichernLeer() == 1) {
 			try {
@@ -627,6 +661,9 @@ public class MusikGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public void playlistSpeichern() {
 		
 		JPanel pNeuePlaylist = new JPanel();
@@ -651,6 +688,10 @@ public class MusikGUI extends JFrame {
 		}	
 	}
 	
+	/**
+	 * 
+	 * @param krit
+	 */
 	public void playlistSpeichernKrit(String krit) {
 		
 		int nummer = 0;
@@ -723,6 +764,9 @@ public class MusikGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * 
+	 */
 	public void playlistLoeschen() {
 		
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
@@ -736,6 +780,9 @@ public class MusikGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public void addToPlaylist() {
 		
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
@@ -782,6 +829,11 @@ public class MusikGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param time
+	 * @return
+	 */
 	public String progTime(int time) {
 		
 		int progTimeSec, progTimeMin = 0;
@@ -807,6 +859,9 @@ public class MusikGUI extends JFrame {
 		return (min + ":" + sec);
 	}
 	
+	/**
+	 * 
+	 */
 	public void openHelp() {
 		
 		if (Desktop.isDesktopSupported()) {

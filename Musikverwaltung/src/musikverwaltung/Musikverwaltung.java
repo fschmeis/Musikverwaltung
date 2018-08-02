@@ -4,6 +4,7 @@ import musikverwaltung.MusikGUI;
 import musikverwaltung.Musikverwaltung;
 
 public class Musikverwaltung {
+	
 	private MusikGUI anzeige;
 	
 	public Musikverwaltung() {
