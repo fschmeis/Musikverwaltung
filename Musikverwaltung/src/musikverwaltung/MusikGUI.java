@@ -297,7 +297,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnNewPlaylist);
 		btnNewPlaylist.setBounds(230, 100, 150, 30);
-		btnNewPlaylist.addActionListener(e->{stoppen(); playlist.playlistSpeichern(); cplaylistadd();});
+		btnNewPlaylist.addActionListener(e->{stoppen(); playlistSpeichern();});
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(btnAddToPlaylist);
@@ -590,7 +590,12 @@ public class MusikGUI extends JFrame {
 	}	
 	
 	public void cplaylistadd() {
+		try {
 		cPlaylist.addItem(playlist.getnew());
+		cPlaylist.setSelectedItem(playlist.getnew());
+		} catch (NullPointerException npe) {
+			cPlaylist.setSelectedItem("alleLieder");
+		}
 	}
 	
 	public void playlistloeschen() {
@@ -601,6 +606,7 @@ public class MusikGUI extends JFrame {
 		else {
 			playlist.playlistLoeschen((String) cPlaylist.getSelectedItem());
 			cPlaylist.removeItem(cPlaylist.getSelectedItem());
+			cPlaylist.setSelectedItem("alleLieder");
 		}
 	}
 	
@@ -608,41 +614,38 @@ public class MusikGUI extends JFrame {
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
 			JOptionPane.showMessageDialog(null, "Playlist enthält bereits alle Titel.", "", JOptionPane.WARNING_MESSAGE);
 		} else {
-		JPanel pNeuePlaylist = new JPanel();
-
-	    JButton btnPfad = new JButton("...");
+			JPanel pAddToPlaylist = new JPanel();
 	    
-	    data = playlist.playlistLesen("alleLieder");
-	    String[] strTitel = new String[data.length];
-	    for(int i = 0; i < data.length; i++) {
-	    	strTitel[i] = data[i][0];
-	    }
-	      
-	    int nummer = 0;
-	    JComboBox cTitelListe = new JComboBox(strTitel);
-	    pNeuePlaylist.add(cTitelListe);
-	    int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
-	    if (result == JOptionPane.OK_OPTION) {
-	    	for(int i = 0; i < data.length; i++) {
-	    		if(data[i][0].equals((String)cTitelListe.getSelectedItem())) {
-	    			nummer = i;
-	    		}
-	    	}
-	    	 
-	    	try {
-				MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cTitelListe.getSelectedItem(), nummer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			data = playlist.playlistLesen("alleLieder");
+			String[] strTitel = new String[data.length];
+			for(int i = 0; i < data.length; i++) {
+				strTitel[i] = data[i][0];
 			}
-	     }
-	    int selectedPlaylist = cPlaylist.getSelectedIndex();
+	      
+			int nummer = 0;
+			JComboBox cTitelListe = new JComboBox(strTitel);
+			pAddToPlaylist.add(cTitelListe);
+			int result = JOptionPane.showConfirmDialog(null, pAddToPlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION) {
+				for(int i = 0; i < data.length; i++) {
+					if(data[i][0].equals((String)cTitelListe.getSelectedItem())) {
+						nummer = i;
+					}
+				}
+	    	 
+				try {
+					MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cTitelListe.getSelectedItem(), nummer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			int selectedPlaylist = cPlaylist.getSelectedIndex();
 
-		cPlaylist.setSelectedIndex(selectedPlaylist);
-	    data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+			cPlaylist.setSelectedIndex(selectedPlaylist);
+			data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
 
-	    dtmAlleTitel.setDataVector(data, columnNames);
-	    dtmAlleTitel.fireTableDataChanged();
+			dtmAlleTitel.setDataVector(data, columnNames);
+			dtmAlleTitel.fireTableDataChanged();
 		}
 	}
 	
@@ -667,4 +670,74 @@ public class MusikGUI extends JFrame {
 		return (Min + "." + Sec);
 	}
 	
+	public void playlistSpeichern() {
+		JPanel pNeuePlaylist = new JPanel();
+		
+		JLabel lTitel = new JLabel("Leere Playlist oder vordefiniert?");
+
+		String[] strAuswahl = {"Leer", "Interpret", "Album", "Genre", "Datum"};
+		JComboBox cAuswahl = new JComboBox(strAuswahl);
+		
+		pNeuePlaylist.add(lTitel);
+		pNeuePlaylist.add(cAuswahl);
+		
+		int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Neue Playlist erstellen:", JOptionPane.OK_CANCEL_OPTION);
+		if(result == JOptionPane.OK_OPTION) {
+			switch ((String)cAuswahl.getSelectedItem()) {
+			case "Leer":	playlist.playlistSpeichernLeer();
+							cplaylistadd();
+							break;
+			default:		playlistSpeichernKrit((String)cAuswahl.getSelectedItem());
+							break;
+			}			
+		}		
+	}
+	
+	public void playlistSpeichernKrit(String Krit) {
+		int nummer = 0;
+		
+		switch (Krit) {
+		case "Interpret":	nummer = 1;
+							break;
+		case "Album":		nummer = 2;
+							break;
+		case "Genre": 		nummer = 3;
+							break;
+		case "Datum":		nummer = 4;
+							break;
+		}
+		
+		playlist.playlistSpeichernLeer();
+		cplaylistadd();
+		JPanel pAddToPlaylist = new JPanel();
+    
+		data = playlist.playlistLesen("alleLieder");
+		String[] strKrit = new String[data.length];
+		for(int i = 0; i < data.length; i++) {
+			strKrit[i] = data[i][nummer];
+		}
+      
+		int nr = 0;
+		JComboBox cKritListe = new JComboBox(strKrit);
+		pAddToPlaylist.add(cKritListe);
+		int result = JOptionPane.showConfirmDialog (null, pAddToPlaylist, "Auswahl des "+ Krit + "s :", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			for(int i = 0; i < data.length; i++) {
+				if(data[i][nummer].equals((String)cKritListe.getSelectedItem())) {  	 
+					try {
+						MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cKritListe.getSelectedItem(), i);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}	
+		}
+		int selectedPlaylist = cPlaylist.getSelectedIndex();
+
+		cPlaylist.setSelectedIndex(selectedPlaylist);
+		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+
+		dtmAlleTitel.setDataVector(data, columnNames);
+		dtmAlleTitel.fireTableDataChanged();
+	}
 }

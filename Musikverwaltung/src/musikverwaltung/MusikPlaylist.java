@@ -16,8 +16,7 @@ public class MusikPlaylist {
 	
 	String playlistName;
 	
-	public void playlistSpeichern() {
-		
+	public void playlistSpeichernLeer() {
 		ImageIcon icon = new ImageIcon("icons/playlist.png");
 		playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 
@@ -25,19 +24,23 @@ public class MusikPlaylist {
 			
 			if (playlistName.equals("")) {
 				JOptionPane.showMessageDialog(null, "Keinen Namen angegeben!", "", JOptionPane.WARNING_MESSAGE);
+				playlistSpeichernLeer();
 			}
 			else {
 				
 				File file = new File("playlists/" + playlistName + ".txt");
-				
-				try {
-					file.createNewFile();		
-				} catch (IOException e) {
-					e.printStackTrace();
+				if(file.exists()) {
+					JOptionPane.showMessageDialog(null, "Playlist existiert bereits", "", JOptionPane.WARNING_MESSAGE);
+					playlistSpeichernLeer();
+				} else {
+					try {
+						file.createNewFile();		
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		}
-		
+		}	
 	}
 	
 	public void playlistLoeschen(String delPlayList){
@@ -106,7 +109,7 @@ public class MusikPlaylist {
 		try {
 			return playlistName;
 		} catch( NullPointerException nullp) {
-			return "";
+			return "alleLieder";
 		}
 	}
 	
@@ -123,7 +126,7 @@ public static void addToPlaylist(String Playlist, String Lied, int nummer) throw
 		File actualPlaylist = new File("playlists/" + Playlist + ".txt");
 
 		PrintWriter pw = new PrintWriter(new FileOutputStream(actualPlaylist,true));
-		pw.append("\n" + Zeile);
+		pw.append(Zeile + "\n");
 		pw.close();
 		
 	}
