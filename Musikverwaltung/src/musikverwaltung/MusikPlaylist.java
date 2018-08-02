@@ -17,8 +17,9 @@ public class MusikPlaylist {
 	String playlistName;
 	
 	/**
+	 * öffnet einen Dialog und erstellt eine leere Playlist
 	 * 
-	 * @return
+	 * @return 1 wenn die Playlist erstellt werden konnte, ansonsten 0
 	 */
 	public int speichernLeer() {
 		
@@ -26,9 +27,9 @@ public class MusikPlaylist {
 		ArrayList<String> listAllePlaylists = new ArrayList<String>();
 
 		ImageIcon icon = new ImageIcon("images/playlist.png");
-
+		
 		playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
-
+		
 		if(playlistName != null) {
 			
 			if(playlistName.equals("")) {
@@ -41,7 +42,8 @@ public class MusikPlaylist {
 				File file = new File("playlists/" + playlistName + ".txt");
 				
 				String[] playlists = allePlaylists();
-						
+				
+				//überprüfen, ob es bereits eine Playlist mit dem eingegebenen Namen gibt
 				for(int i = 0; i < playlists.length; i++) {
 					if(playlists[i].equals(playlistName)) {
 						bereitsVorhanden = true;
@@ -70,6 +72,7 @@ public class MusikPlaylist {
 	}
 	
 	/**
+	 * löscht die ausgewählte Playlist
 	 * 
 	 * @param delPlayList
 	 */
@@ -86,9 +89,11 @@ public class MusikPlaylist {
 	}
 	
 	/**
+	 * liest die ausgewählte Playlist aus,
+	 * damit die Daten zu den Liedern in der Tabelle dargestellt werden
 	 * 
 	 * @param strPlaylist
-	 * @return
+	 * @return String[][] data mit den gespeicherten Lied-Informationen
 	 */
 	public String[][] lesen(String strPlaylist) {
 		
@@ -117,8 +122,9 @@ public class MusikPlaylist {
 	}
 	
 	/**
+	 * liest alle Playlistnamen aus dem Ordner aus für die Combobox
 	 * 
-	 * @return
+	 * @return String[] mit allen Playlistnamen
 	 */
 	public String[] allePlaylists() {
 		
@@ -146,8 +152,9 @@ public class MusikPlaylist {
 	}
 	
 	/**
+	 * gibt den Namen einer neuen Playlist zurück
 	 * 
-	 * @return
+	 * @return Name der neuen Playlist
 	 */
 	public String getnew() {
 		try {
@@ -158,6 +165,7 @@ public class MusikPlaylist {
 	}
 	
 	/**
+	 * fügt Infomationen eines Liedes zur ausgewählten Playlist hinzu
 	 * 
 	 * @param Playlist
 	 * @param Lied

@@ -75,6 +75,23 @@ public class MusikGUI extends JFrame {
 	
 	JProgressBar progBar = new JProgressBar();
 	
+	//Action-Listener - aktualisiert die Progressbar und ruft den nächsten Titel auf, wenn diese ihr Maximum erreicht
+	ActionListener progressor = new ActionListener () {
+	    public void actionPerformed(ActionEvent evt) {
+	    	progress++;
+	    	progBar.setValue(progress);
+	    	progBar.setMaximum(player.getduration());
+	    		
+	    	progBar.setString(progTime(progress) + " / " + progTime(progBar.getMaximum()));
+	    		
+	    	if(progress == progBar.getMaximum()) {
+	    		nextTitel();
+	    	}
+	    }
+	};
+	    
+	Timer timer = new Timer(1000, progressor);
+	
 	String[] columnNames = {"Titel", "Interpret", "Album", "Genre", "Datum", "Pfad"};
 	
 	String[][] data = playlist.lesen("alleLieder");
@@ -110,21 +127,6 @@ public class MusikGUI extends JFrame {
 	
 	JTable tblAlleTitel = new JTable(dtmAlleTitel);
 	JScrollPane scpAlleTitel = new JScrollPane(tblAlleTitel);
-	
-	ActionListener progressor = new ActionListener () {
-    	public void actionPerformed(ActionEvent evt) {
-    		progress++;
-    		progBar.setValue(progress);
-    		progBar.setMaximum(player.getduration());
-    		
-    		progBar.setString(progTime(progress) + " / " + progTime(progBar.getMaximum()));
-    		
-    		if(progress == progBar.getMaximum()) {
-    			nextTitel();
-    		}
-    	}
-    };
-    Timer timer = new Timer(1000, progressor);
 		
 	//sonstige Variablen	
 	boolean play = false;
@@ -137,6 +139,7 @@ public class MusikGUI extends JFrame {
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
+		//programm-Titel
 		this.setTitle("Musikverwaltung");
 		this.setSize(1060, 700);
 		
@@ -188,7 +191,7 @@ public class MusikGUI extends JFrame {
 		tblPlaylist.setSelectionBackground(Color.ORANGE);
 		tblAlleTitel.setSelectionBackground(Color.ORANGE);
 		
-		//Mouse-Listener tblPlaylist
+		//Mouse-Listener tblPlaylist - spielt das durch Doppelklick ausgewählte Lied ab
         tblPlaylist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -203,15 +206,15 @@ public class MusikGUI extends JFrame {
             }
         });
         
-        //Mouse-Listener tblAlleTitel
+        //Mouse-Listener tblAlleTitel - löscht den durch Rechtsklick ausgewählten Titel
         tblAlleTitel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
             	if(evt.getButton() == 3) {
             		try {
 						delTitel();
-					} catch (IOException e) {
-						e.printStackTrace();
+					} catch (IOException ex) {
+						ex.printStackTrace();
 					} 
             	}	           		
             }
@@ -365,9 +368,11 @@ public class MusikGUI extends JFrame {
 	String path = new String();
 	
 	/**
-	 * 
+	 * öffnet einen Dialog zum Hinzufügen eines neuen Liedes und
+	 * ruft die Funktion zum Speichern des Eintrages auf
 	 */
 	private void neuerTitel() {
+		
 		JPanel pNeuerTitel = new JPanel();
 		JTextField tfTitel = new JTextField(8);
 	    JTextField tfInterpret = new JTextField(8);
@@ -403,7 +408,7 @@ public class MusikGUI extends JFrame {
 	      pNeuerTitel.add(new JLabel("Pfad:"));
 	      pNeuerTitel.add(btnPfad);
 	      
-	      btnPfad.addActionListener(e->optPfad());
+	      btnPfad.addActionListener(e->getPfad());
 	      
 	      int result = JOptionPane.showConfirmDialog(null, pNeuerTitel, "Neuen Titel hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
 	      
@@ -417,9 +422,9 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * öffnet einen Dialog zur Auswahl einer Datei
 	 */
-	private void optPfad() {
+	private void getPfad() {
 		
 		JButton open = new JButton();
   	  	JFileChooser fc = new JFileChooser();
@@ -436,6 +441,8 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
+	 * öffnet einen Dialog, bei dessen Bestätigung 
+	 * die Funktion zum Löschen des Titels aufgerufen wird
 	 * 
 	 * @throws IOException
 	 */
@@ -458,6 +465,7 @@ public class MusikGUI extends JFrame {
 			JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE);
 		}
 		
+		//aktualisiert die Tabellen
 		data = playlist.lesen(cPlaylist.getSelectedItem().toString());
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
@@ -468,7 +476,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * öffnet den Benutzermodus
 	 */
 	public void bModusAuf() {
 		pBenutzermod.setVisible(true);
@@ -476,7 +484,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * öffnet den Verwaltungsmodus
 	 */
 	public void vModusAuf() {
 		pBenutzermod.setVisible(false);
@@ -484,10 +492,11 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * spielt das ausgewählte Lied ab oder pausiert
 	 */
 	public void abspielen() {
 		
+		//wenn kein Lied abgespielt wird
 		if(play == false) {
 			
             if(tblPlaylist.getSelectedRow() == -1) {
@@ -518,6 +527,7 @@ public class MusikGUI extends JFrame {
             
 		}
 		else {
+			//wenn Lied nicht pausiert wird
 			if(pause == false) {
 				
 				pause = true;
@@ -553,7 +563,7 @@ public class MusikGUI extends JFrame {
 	}
 
 	/**
-	 * 
+	 * stoppt das aktuelle Lied, hält die Progressbar an und setzt diese zurück
 	 */
 	public void stoppen() {
 		
@@ -572,6 +582,7 @@ public class MusikGUI extends JFrame {
 			}
 		}
 		
+		//Timer anhalten und Progressbar zurücksetzen
 		timer.stop();
 		progress = 0;
 		progBar.setValue(progress);
@@ -579,7 +590,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * stoppt das aktuelle Lied und spielt das vorherige Lied ab 
 	 */
 	public void previousTitel() {
 		stoppen();
@@ -598,7 +609,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * stoppt das aktuelle Lied und spielt das darauf folgende Lied ab 
 	 */
 	public void nextTitel() {
 		stoppen();
@@ -617,7 +628,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * stoppt das aktuelle Lied und aktualisiert die Tabelle beim Wechsel der Playlist
 	 */
 	public void playlistWechseln() {
 		
@@ -633,8 +644,10 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
+	 * ruft die Funktion zum Anlegen einer Playlist auf und
+	 * fügt deren Namen der Combobox hinzu
 	 * 
-	 * @return
+	 * @return 1 wenn Playlist angelegt wurde, ansonsten 0
 	 */
 	public int cplaylistadd() {
 		if(playlist.speichernLeer() == 1) {
@@ -654,12 +667,12 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * öffnet einen Dialog beim Erstellen einer neuen Playlist
+	 * Auswahl zwischen leerer oder vordefinierter Playlist
 	 */
 	public void playlistSpeichern() {
 		
-		JPanel pNeuePlaylist = new JPanel();
-		
+		JPanel pNeuePlaylist = new JPanel();	
 		JLabel lTitel = new JLabel("Leere Playlist oder vordefiniert?");
 		String[] strAuswahl = {"Leer", "Interpret", "Album", "Genre", "Datum"};
 		JComboBox cAuswahl = new JComboBox(strAuswahl);
@@ -668,6 +681,8 @@ public class MusikGUI extends JFrame {
 		pNeuePlaylist.add(cAuswahl);
 		
 		int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Neue Playlist erstellen:", JOptionPane.OK_CANCEL_OPTION);
+		
+		//Auswahl zwischen leerer oder vordefinierter Playlist 
 		if(result == JOptionPane.OK_OPTION) {
 			switch ((String)cAuswahl.getSelectedItem()) {
 			
@@ -681,6 +696,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
+	 * speichert eine Playlist nach ausgewähltem Kriterium
 	 * 
 	 * @param krit
 	 */
@@ -688,6 +704,7 @@ public class MusikGUI extends JFrame {
 		
 		int nummer = 0;
 		
+		//Auswahl des Kriteriums
 		switch (krit) {
 			case "Interpret":	nummer = 1;
 								break;
@@ -702,6 +719,7 @@ public class MusikGUI extends JFrame {
 								break;
 		}
 		
+		//wenn eine leere Playlist erstellt wurde
 		if(cplaylistadd() == 1) {
 			
 			JPanel pAddToPlaylist = new JPanel();
@@ -711,8 +729,10 @@ public class MusikGUI extends JFrame {
 			ArrayList<String> listKrit = new ArrayList<String>();
 			boolean inListe = false;
 			
+			//erstes Element anfügen
 			listKrit.add(data[0][nummer]);
 			
+			//weitere Elemente anfügen, aber nur wenn noch nicht in Liste vorhanden
 			for(int i = 0; i < data.length; i++) {
 				for(int j = 0; j < listKrit.size(); j++) {
 					if(listKrit.get(j) != null) {
@@ -737,6 +757,7 @@ public class MusikGUI extends JFrame {
 			
 			int result = JOptionPane.showConfirmDialog (null, pAddToPlaylist, "Auswahl des " + krit + "s :", JOptionPane.OK_CANCEL_OPTION);
 			
+			//Titel werden hinzugefügt
 			if(result == JOptionPane.OK_OPTION) {
 				for(int i = 0; i < data.length; i++) {
 					if(data[i][nummer].equals((String)cKritListe.getSelectedItem())) {  	 
@@ -749,6 +770,7 @@ public class MusikGUI extends JFrame {
 				}	
 			}
 			
+			//aktualisiert die Tabelle
 			data = playlist.lesen(cPlaylist.getSelectedItem().toString());
 			dtmPlaylist.setDataVector(data, columnNames);
 			dtmPlaylist.fireTableDataChanged();
@@ -757,7 +779,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * löscht eine Playlist
 	 */
 	public void playlistLoeschen() {
 		
@@ -773,7 +795,7 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * fügt einen neuen Titel zur ausgewählten Playlist hinzu
 	 */
 	public void addToPlaylist() {
 		
@@ -792,11 +814,12 @@ public class MusikGUI extends JFrame {
 	      
 			int nummer = 0;
 			JComboBox cTitelListe = new JComboBox(strTitel);
-
+			
 			pAddToPlaylist.add(cTitelListe);
 			
 			int result = JOptionPane.showConfirmDialog(null, pAddToPlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
 			
+			//Titel hinzufügen
 			if (result == JOptionPane.OK_OPTION) {
 				for(int i = 0; i < data.length; i++) {
 					if(data[i][0].equals((String)cTitelListe.getSelectedItem())) {
@@ -806,8 +829,8 @@ public class MusikGUI extends JFrame {
 	    	 
 				try {
 					MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cTitelListe.getSelectedItem(), nummer);
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
 			}
 			
@@ -815,6 +838,7 @@ public class MusikGUI extends JFrame {
 
 			cPlaylist.setSelectedIndex(selectedPlaylist);
 			
+			//aktualisiert die Tabelle
 			data = playlist.lesen(cPlaylist.getSelectedItem().toString());
 			dtmPlaylist.setDataVector(data, columnNames);
 			dtmPlaylist.fireTableDataChanged();
@@ -822,9 +846,10 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
+	 * formatiert die Zeit
 	 * 
 	 * @param time
-	 * @return
+	 * @return Zeit
 	 */
 	public String progTime(int time) {
 		
@@ -852,13 +877,13 @@ public class MusikGUI extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * öffnet die Anleitung
 	 */
 	public void openHelp() {
 		
 		if (Desktop.isDesktopSupported()) {
 		    try {
-		        File file = new File("hilfe.pdf");
+		        File file = new File("anleitung.pdf");
 		        
 		        if(file.exists()) {
 		        	Desktop.getDesktop().open(file);

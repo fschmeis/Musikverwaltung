@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 public class MusikDaten {
 	
 	/**
+	 * speichert Informationen zu einem neuen Lied in der Übersicht und der Datei mit allen Lieder
 	 * 
 	 * @param titel
 	 * @param interpret
@@ -33,6 +34,7 @@ public class MusikDaten {
 	}
 	
 	/**
+	 * löscht das durch Rechtsklick ausgewählte Lied aus der Datei mit allen Liedern
 	 * 
 	 * @param datenTitel
 	 * @throws IOException

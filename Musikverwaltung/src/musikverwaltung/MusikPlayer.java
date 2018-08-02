@@ -23,9 +23,10 @@ public class MusikPlayer {
 	long duration;
 	
 	/**
+	 * liest die Datei mithilfe des Pfads und bereitet den audioClip vor
 	 * 
 	 * @param pfad
-	 * @return
+	 * @return 1 wenn die Datei gelesen und der audioClip vorbereitet werden konnten
 	 */
 	public int musikVorbereiten(String pfad) {
 		try {
@@ -60,15 +61,16 @@ public class MusikPlayer {
             	return 0;
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Abspielfehler: " + ex.getMessage() + " für " + pfad, "", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Fehler: " + ex.getMessage() + " für " + pfad, "", JOptionPane.WARNING_MESSAGE);
             return 0;
         }
 	}
 	
 	/**
+	 * startet den vorbereiteten audioClip und damit das Lied
 	 * 
 	 * @param pfad
-	 * @return
+	 * @return 1 wenn das Lied abgespielt werden konnte, ansonsten 0
 	 */
 	public int musikAbspielen(String pfad) {
 		
@@ -102,7 +104,7 @@ public class MusikPlayer {
 	}
 	
 	/**
-	 * 
+	 * stoppt den aktuellen audioClip und damit das Lied
 	 */
 	public void musikStoppen() {
 		try {
@@ -114,7 +116,7 @@ public class MusikPlayer {
 	}
 	
 	/**
-	 * 
+	 * startet den aktuellen audioClip und spielt damit das Lied weiter ab
 	 */
 	public void musikWeiterspielen() {
 		
@@ -143,8 +145,9 @@ public class MusikPlayer {
 	}
 	
 	/**
+	 * berechnet die Dauer eines Liedes
 	 * 
-	 * @return
+	 * @return Dauer eines Liedes
 	 */
 	public int getduration() {
 		
