@@ -39,7 +39,6 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 
 public class MusikGUI extends JFrame {
@@ -717,13 +716,9 @@ public class MusikGUI extends JFrame {
 				}	
 			}
 			
-			int selectedPlaylist = cPlaylist.getSelectedIndex();
-			
-			cPlaylist.setSelectedIndex(selectedPlaylist);
-			
 			data = playlist.lesen(cPlaylist.getSelectedItem().toString());
-			dtmAlleTitel.setDataVector(data, columnNames);
-			dtmAlleTitel.fireTableDataChanged();
+			dtmPlaylist.setDataVector(data, columnNames);
+			dtmPlaylist.fireTableDataChanged();
 		}
 		
 	}
@@ -741,7 +736,8 @@ public class MusikGUI extends JFrame {
 		}
 	}
 	
-	public void addToPlaylist(){
+	public void addToPlaylist() {
+		
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
 			JOptionPane.showMessageDialog(null, "Playlist enthält bereits alle Titel.", "", JOptionPane.WARNING_MESSAGE);
 		}
@@ -779,10 +775,10 @@ public class MusikGUI extends JFrame {
 			int selectedPlaylist = cPlaylist.getSelectedIndex();
 
 			cPlaylist.setSelectedIndex(selectedPlaylist);
+			
 			data = playlist.lesen(cPlaylist.getSelectedItem().toString());
-
-			dtmAlleTitel.setDataVector(data, columnNames);
-			dtmAlleTitel.fireTableDataChanged();
+			dtmPlaylist.setDataVector(data, columnNames);
+			dtmPlaylist.fireTableDataChanged();
 		}
 	}
 	
@@ -815,10 +811,17 @@ public class MusikGUI extends JFrame {
 		
 		if (Desktop.isDesktopSupported()) {
 		    try {
-		        File myFile = new File("hilfe.pdf");
-		        Desktop.getDesktop().open(myFile);
+		        File file = new File("hilfe.pdf");
+		        
+		        if(file.exists()) {
+		        	Desktop.getDesktop().open(file);
+		        }
+		        else {
+		        	JOptionPane.showMessageDialog(null, "Datei nicht gefunden", "", JOptionPane.WARNING_MESSAGE);
+		        }
+		        
 		    } catch (IOException ex) {
-		    	JOptionPane.showMessageDialog(null, "Datei nicht gefunden", "", JOptionPane.WARNING_MESSAGE);
+		    	JOptionPane.showMessageDialog(null, "Datei konnte nicht geöffnet werden", "", JOptionPane.WARNING_MESSAGE);
 		    }
 		}
 	}

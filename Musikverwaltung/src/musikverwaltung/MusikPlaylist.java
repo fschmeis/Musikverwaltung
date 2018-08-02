@@ -66,7 +66,7 @@ public class MusikPlaylist {
 		}
 	}
 	
-	public void loeschen(String delPlayList){
+	public void loeschen(String delPlayList) {
 		
 		File inputFile = new File("playlists/" + delPlayList + ".txt");
 
