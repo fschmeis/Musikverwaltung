@@ -735,6 +735,7 @@ public class MusikGUI extends JFrame {
 		}
 		else {
 			playlist.loeschen((String) cPlaylist.getSelectedItem());
+
 			cPlaylist.removeItem(cPlaylist.getSelectedItem());
 			cPlaylist.setSelectedItem("alleLieder");
 		}
@@ -746,10 +747,10 @@ public class MusikGUI extends JFrame {
 		}
 		else {
 			JPanel pAddToPlaylist = new JPanel();
-	    
+
 			data = playlist.lesen("alleLieder");
 			String[] strTitel = new String[data.length];
-			
+
 			for(int i = 0; i < data.length; i++) {
 				strTitel[i] = data[i][0];
 			}
@@ -821,5 +822,4 @@ public class MusikGUI extends JFrame {
 		    }
 		}
 	}
-	
 }

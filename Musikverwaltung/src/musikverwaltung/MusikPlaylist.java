@@ -20,19 +20,22 @@ public class MusikPlaylist {
 		
 		boolean bereitsVorhanden = false;
 		ArrayList<String> listAllePlaylists = new ArrayList<String>();
-		
+
 		ImageIcon icon = new ImageIcon("images/playlist.png");
+
 		playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 
 		if(playlistName != null) {
 			
 			if(playlistName.equals("")) {
 				JOptionPane.showMessageDialog(null, "Keinen Namen angegeben!", "", JOptionPane.WARNING_MESSAGE);
+				
 				return 0;
 			}
 			else {
 				
 				File file = new File("playlists/" + playlistName + ".txt");
+				
 				String[] playlists = allePlaylists();
 						
 				for(int i = 0; i < playlists.length; i++) {
@@ -57,11 +60,10 @@ public class MusikPlaylist {
 				}
 				
 			}
-		}
+		}	
 		else {
 			return 0;
 		}
-		
 	}
 	
 	public void loeschen(String delPlayList){
@@ -133,7 +135,7 @@ public class MusikPlaylist {
 			return playlistName;
 		}
 		catch(NullPointerException ex) {
-			return "";
+			return "alleLieder";
 		}
 	}
 	
