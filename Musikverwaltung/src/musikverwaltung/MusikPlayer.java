@@ -14,6 +14,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JOptionPane;
 
 
 public class MusikPlayer {
@@ -25,59 +26,73 @@ public class MusikPlayer {
 	AudioFormat audioFormat;
 	long duration;
 	
-	public void musikAbspielen(String pfad) {
+	public int musikVorbereiten(String pfad) {
+		try {
+        	audioFilePath = pfad;
+    		
+    		audioFile = new File(audioFilePath);
+    		 
+            try {        	
+                audioStream = AudioSystem.getAudioInputStream(audioFile);
+     
+                audioFormat = audioStream.getFormat();
+     
+                DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
+     
+                audioClip = (Clip) AudioSystem.getLine(info);
+     
+                audioClip.open(audioStream);
+                
+                duration = audioClip.getMicrosecondLength();
+                duration = duration / 1_000_000;
+                
+                return 1;
+                
+            } catch (UnsupportedAudioFileException ex) {
+                JOptionPane.showMessageDialog(null, "Audio Format wird nicht unterstützt.", "", JOptionPane.WARNING_MESSAGE);
+                return 0;
+            } catch (LineUnavailableException ex) {
+                JOptionPane.showMessageDialog(null, "Audiospur ist nicht verfügbar.", "", JOptionPane.WARNING_MESSAGE);
+                return 0;
+            } catch (IOException ex) {
+            	JOptionPane.showMessageDialog(null, "Fehler beim Abspielen oder Datei nicht vorhanden.", "", JOptionPane.WARNING_MESSAGE);
+            	return 0;
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Abspielfehler: " + ex.getMessage() + " für " + pfad, "", JOptionPane.WARNING_MESSAGE);
+            return 0;
+        }
+	}
+	
+	public int musikAbspielen(String pfad) {
 		
+		if(musikVorbereiten(pfad) == 1) {
+			
 			new Thread(new Runnable() {
 	            public void run() {
-	                try {
-	                	audioFilePath = pfad;
-	            		
-	            		audioFile = new File(audioFilePath);
-	            		 
-	                    try {        	
-	                        audioStream = AudioSystem.getAudioInputStream(audioFile);
-	             
-	                        audioFormat = audioStream.getFormat();
-	             
-	                        DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
-	             
-	                        audioClip = (Clip) AudioSystem.getLine(info);
-	             
-	                        audioClip.open(audioStream);
-	                        
-	                        duration = audioClip.getMicrosecondLength();
-		                    duration = duration / 1_000_000;
-	                        
-	                        audioClip.start();
-	                        
-	                        while (duration > 0) {
-	                            
-	                            try {
-	                                Thread.sleep(100000);
-	                            } catch (InterruptedException ex) {
-	                                ex.printStackTrace();
-	                            }
-	                            
-	                            duration--;
-	                        }     
-	                        
-	                        audioClip.close();
-	                        
-	                    } catch (UnsupportedAudioFileException ex) {
-	                        System.out.println("Audio Format wird nicht unterstützt.");
-	                        ex.printStackTrace();
-	                    } catch (LineUnavailableException ex) {
-	                        System.out.println("Audiospur ist nicht verfügbar.");
-	                        ex.printStackTrace();
-	                    } catch (IOException ex) {
-	                        System.out.println("Fehler beim Abspielen.");
+	                
+	                audioClip.start();
+	                
+	                while (duration > 0) {   
+	                    try {
+	                        Thread.sleep(100000);
+	                    } catch (InterruptedException ex) {
 	                        ex.printStackTrace();
 	                    }
-	                } catch (Exception ex) {
-	                    System.out.println("Abspielfehler: " + ex.getMessage() + " für " + pfad);
-	                }
+	                         
+	                    duration--;
+	                }     
+	                        
+	                audioClip.close();
 	            }
 	        }).start();
+			
+			return 1;
+		}
+		else {
+			return 0;
+		}
+			
 	}
 	
 	
@@ -123,7 +138,7 @@ public class MusikPlayer {
 		
 		try {
 			return ((int) audioClip.getMicrosecondLength()) / 1_000_000;
-		} catch(NullPointerException er) {
+		} catch(NullPointerException ex) {
 			return 100;
 		}
 	}

@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -53,8 +55,9 @@ public class MusikGUI extends JFrame {
 	
 	//Menüleiste
 	JMenuBar bar;
-	JMenu dateimenu;
+	JMenu startmenu;
 	JMenu modusmenu;
+	JMenuItem hilfeItem;
 	JMenuItem beendenItem;
 	JMenuItem bModusItem;
 	JMenuItem vModusItem;
@@ -75,7 +78,7 @@ public class MusikGUI extends JFrame {
 	
 	String[] columnNames = {"Titel", "Interpret", "Album", "Genre", "Datum", "Pfad"};
 	
-	String[][] data = playlist.playlistLesen("alleLieder");
+	String[][] data = playlist.lesen("alleLieder");
 	JLabel lblImage = new JLabel();
 	JLabel lblAktTitel = new JLabel("");	//Vom Titel abhängiges Label
 	
@@ -96,6 +99,7 @@ public class MusikGUI extends JFrame {
 	JLabel lblVerwaltungsmodus = new JLabel("Verwaltungsmodus");
 	
 	JButton btnAddTitel = new JButton();
+	JLabel lblImage2 = new JLabel();
 	
 	DefaultTableModel dtmAlleTitel = new DefaultTableModel(data, columnNames) {
 		@Override
@@ -140,9 +144,6 @@ public class MusikGUI extends JFrame {
 		//Mitte des Bildschirms
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		
-		//Vollbild
-//		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
 		//Beenden bei Klick auf rotes Kreuz
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
@@ -151,8 +152,10 @@ public class MusikGUI extends JFrame {
 		
 		//Menu
 		bar = new JMenuBar();
-		dateimenu = new JMenu("Datei");
+		startmenu = new JMenu("Start");
 		modusmenu = new JMenu("Modus");
+		hilfeItem = new JMenuItem("Hilfe");
+		hilfeItem.addActionListener(e->openHelp());
 		beendenItem = new JMenuItem("Beenden");
 		beendenItem.addActionListener(e->{System.exit(0);});
 		bModusItem = new JMenuItem("Benutzermodus");
@@ -160,10 +163,11 @@ public class MusikGUI extends JFrame {
 		vModusItem = new JMenuItem("Verwaltungsmodus");
 		vModusItem.addActionListener(e->{vModusAuf(); stoppen();});
 		
-		dateimenu.add(beendenItem);
+		startmenu.add(hilfeItem);
+		startmenu.add(beendenItem);
 		modusmenu.add(bModusItem);
 		modusmenu.add(vModusItem);
-		bar.add(dateimenu);
+		bar.add(startmenu);
 		bar.add(modusmenu);
 		this.setJMenuBar(bar);
 		
@@ -189,32 +193,33 @@ public class MusikGUI extends JFrame {
         tblPlaylist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-            	if(evt.getButton() == 1)
-//                int row = tblPlaylist.rowAtPoint(evt.getPoint());
-//                int col = tblPlaylist.columnAtPoint(evt.getPoint());
-                
+            	if(evt.getButton() == 1) {
             		if (evt.getClickCount() == 1) {
             			stoppen();
             		}
             		else {
             			abspielen();
             		}
+            	}
             }
         });
         
+        //Mouse-Listener tblAlleTitel
         tblAlleTitel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-            	if(evt.getButton() == 3)
-					try {
+            	if(evt.getButton() == 3) {
+            		try {
 						delTitel();
 					} catch (IOException e) {
 						e.printStackTrace();
-					}            		
+					} 
+            	}	           		
             }
+            
             public void mouseReleased(MouseEvent evt)
             {
-                if (evt.getButton() == 3){
+                if (evt.getButton() == 3) {
                     int row = tblAlleTitel.rowAtPoint( evt.getPoint() );
                     int column = tblAlleTitel.columnAtPoint( evt.getPoint() );
          
@@ -223,7 +228,6 @@ public class MusikGUI extends JFrame {
                 }
             }
         });
-        
         
         tblPlaylist.setAutoCreateRowSorter(true);
         
@@ -297,7 +301,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnNewPlaylist);
 		btnNewPlaylist.setBounds(230, 100, 150, 30);
-		btnNewPlaylist.addActionListener(e->{stoppen(); playlist.playlistSpeichern(); cplaylistadd();});
+		btnNewPlaylist.addActionListener(e->{stoppen(); playlistSpeichern();});
 		btnNewPlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 		
 		pBenutzermod.add(btnAddToPlaylist);
@@ -307,7 +311,7 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(btnDeletePlaylist);
 		btnDeletePlaylist.setBounds(550, 100, 150, 30);
-		btnDeletePlaylist.addActionListener(e->{playlistloeschen();});
+		btnDeletePlaylist.addActionListener(e->{playlistLoeschen();});
 		btnDeletePlaylist.setCursor((Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)));
 				
 		pBenutzermod.add(progBar);
@@ -315,7 +319,7 @@ public class MusikGUI extends JFrame {
 		progBar.setValue(progress);
 		progBar.setBorderPainted(true);
 		progBar.setStringPainted(true);
-		progBar.setString("00.00 / 00.00");
+		progBar.setString("00:00 / 00:00");
 		
 		pBenutzermod.add(lblBenutzermodus);
 		lblBenutzermodus.setForeground(Color.WHITE);
@@ -324,8 +328,8 @@ public class MusikGUI extends JFrame {
 		
 		pBenutzermod.add(lblImage);
 		lblImage.setForeground(Color.WHITE);
-		lblImage.setBounds(420, 400, 128, 128);
-		lblImage.setIcon(new ImageIcon("images/default.png"));
+		lblImage.setBounds(456, 400, 128, 128);
+		lblImage.setIcon(new ImageIcon("images/bModus.png"));
 		
 		pBenutzermod.add(lblAktTitel);
 		lblAktTitel.setForeground(Color.WHITE);
@@ -358,12 +362,16 @@ public class MusikGUI extends JFrame {
 		
 		tblAlleTitel.setAutoCreateRowSorter(true);
 		
+		pVerwaltungsmod.add(lblImage2);
+		lblImage2.setForeground(Color.WHITE);
+		lblImage2.setBounds(456, 400, 128, 128);
+		lblImage2.setIcon(new ImageIcon("images/vModus.png"));
 		
 		pVerwaltungsmod.add(scpAlleTitel);
 		scpAlleTitel.setBounds(20, 150, 1000, 200);
 	}
 	
-	String path = new String();	//nicht optimal
+	String path = new String();
 	
 	private void neuerTitel() {
 		JPanel pNeuerTitel = new JPanel();
@@ -404,11 +412,12 @@ public class MusikGUI extends JFrame {
 	      btnPfad.addActionListener(e->optPfad());
 	      
 	      int result = JOptionPane.showConfirmDialog(null, pNeuerTitel, "Neuen Titel hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+	      
 	      if (result == JOptionPane.OK_OPTION) {
-	    	  musikdaten.MusikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
+	    	  musikdaten.musikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
 	      }
 	      
-	      data = playlist.playlistLesen("alleLieder");
+	      data = playlist.lesen("alleLieder");
 	      dtmAlleTitel.setDataVector(data, columnNames);
 	      dtmAlleTitel.fireTableDataChanged();
 }
@@ -418,9 +427,11 @@ public class MusikGUI extends JFrame {
 		JButton open = new JButton();
   	  	JFileChooser fc = new JFileChooser();
   	  	FileNameExtensionFilter filter = new FileNameExtensionFilter(".wav", "wav");
+  	  	
   	  	fc.setFileFilter(filter);
   	  	fc.setAcceptAllFileFilterUsed(false);
   	  	fc.setDialogTitle("Pfad des Musikstückes:");
+  	  	
   	  	if (fc.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
   	  	  path = fc.getSelectedFile().getAbsolutePath();
   	  	  path = path.replace("\\", "/");
@@ -431,6 +442,7 @@ public class MusikGUI extends JFrame {
 		
 		int row = tblAlleTitel.getSelectedRow();
 		String datenTitel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
+		
 		for (int column = 1; column<tblAlleTitel.getColumnCount(); column++) {
 			datenTitel = datenTitel + "," + tblAlleTitel.getModel().getValueAt(row, column).toString();
 		}
@@ -440,7 +452,16 @@ public class MusikGUI extends JFrame {
 		
 		int result = JOptionPane.showConfirmDialog(new JPanel(), titel + " von " + kuenstler, "Titel löschen?", JOptionPane.YES_NO_OPTION);
 		
-		data = playlist.playlistLesen("alleLieder");
+		if(result == 0) {
+			musikdaten.musikLoeschen(datenTitel);
+			JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE);
+		}
+		
+		data = playlist.lesen(cPlaylist.getSelectedItem().toString());
+		dtmPlaylist.setDataVector(data, columnNames);
+		dtmPlaylist.fireTableDataChanged();
+		
+		data = playlist.lesen("alleLieder");
 		dtmAlleTitel.setDataVector(data, columnNames);
 		dtmAlleTitel.fireTableDataChanged();
 	}
@@ -458,17 +479,7 @@ public class MusikGUI extends JFrame {
 	public void abspielen() {
 		
 		if(play == false) {
-			try {
-				Image img = ImageIO.read(new FileInputStream("images/pause.png"));
-				btnPlay.setIcon(new ImageIcon(img));
-				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
-			} catch (Exception ex) {
-				System.out.println(ex);
-			}
-				
-			play = true;
-			pause = false;
-				
+			
             if(tblPlaylist.getSelectedRow() == -1) {
             	selectedRow = 0;
             	tblPlaylist.setRowSelectionInterval(selectedRow, selectedRow);
@@ -477,13 +488,32 @@ public class MusikGUI extends JFrame {
                 selectedRow = tblPlaylist.getSelectedRow();
             }
                
-            player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 5).toString());
-            lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1)); 
+            if(player.musikAbspielen(tblPlaylist.getValueAt(selectedRow, 5).toString()) == 1) {
+            	
+            	play = true;
+    			pause = false;
+            	
+            	lblAktTitel.setText((String) tblPlaylist.getValueAt(selectedRow, 0) + " - " + (String) tblPlaylist.getValueAt(selectedRow, 1)); 
+            	
+                timer.start();
+                
+                try {
+    				Image img = ImageIO.read(new FileInputStream("images/pause.png"));
+    				btnPlay.setIcon(new ImageIcon(img));
+    				btnPlay.setHorizontalTextPosition(SwingConstants.CENTER);
+    			} catch (Exception ex) {
+    				System.out.println(ex);
+    			}
+            }
             
-            timer.start();
 		}
 		else {
 			if(pause == false) {
+				
+				pause = true;
+				player.musikStoppen();
+				timer.stop();
+				
 				try {
 					Image img = ImageIO.read(new FileInputStream("images/play.png"));
 					btnPlay.setIcon(new ImageIcon(img));
@@ -491,12 +521,14 @@ public class MusikGUI extends JFrame {
 				} catch (Exception ex) {
 				    System.out.println(ex);
 				}
-				
-				pause = true;
-				player.musikStoppen();
-				timer.stop();
 			}
 			else {
+				
+				pause = false;
+				
+				player.musikWeiterspielen();
+				timer.start();
+				
 				try {
 					Image img = ImageIO.read(new FileInputStream("images/pause.png"));
 					btnPlay.setIcon(new ImageIcon(img));
@@ -504,11 +536,6 @@ public class MusikGUI extends JFrame {
 				} catch (Exception ex) {
 				    System.out.println(ex);
 				}
-				
-				pause = false;
-				
-				player.musikWeiterspielen();
-				timer.start();
 			}
 				
 		}
@@ -519,6 +546,11 @@ public class MusikGUI extends JFrame {
 	public void stoppen() {
 		
 		if(play == true) {
+			
+			play = false;
+			
+			player.musikStoppen();
+			
 			try {
 				Image img = ImageIO.read(new FileInputStream("images/play.png"));
 				btnPlay.setIcon(new ImageIcon(img));
@@ -526,22 +558,12 @@ public class MusikGUI extends JFrame {
 			} catch (Exception ex) {
 			    System.out.println(ex);
 			}
-			
-			play = false;
-			
-			player.musikStoppen();
 		}
-		
-//		cPlaylist.setModel(new DefaultComboBoxModel<String>(playlist.allePlaylists()));
-//		
-//		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
-//		dtmPlaylist.setDataVector(data, columnNames);
-//		dtmPlaylist.fireTableDataChanged();
 		
 		timer.stop();
 		progress = 0;
 		progBar.setValue(progress);
-		progBar.setString("00.00 / 00.00");
+		progBar.setString("00:00 / 00:00");
 	}
 	
 	public void previousTitel() {
@@ -584,87 +606,220 @@ public class MusikGUI extends JFrame {
 		
 		cPlaylist.setSelectedIndex(selectedPlaylist);
 		
-		data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+		data = playlist.lesen(cPlaylist.getSelectedItem().toString());
 		dtmPlaylist.setDataVector(data, columnNames);
 		dtmPlaylist.fireTableDataChanged();
 	}	
 	
-	public void cplaylistadd() {
-		cPlaylist.addItem(playlist.getnew());
+	public int cplaylistadd() {
+		if(playlist.speichernLeer() == 1) {
+			try {
+				cPlaylist.addItem(playlist.getnew());
+				cPlaylist.setSelectedItem(playlist.getnew());
+				return 1;
+			}
+			catch(NullPointerException ex) {
+				cPlaylist.setSelectedItem("alleLieder");
+				return 0;
+			}
+		}
+		else {
+			return 0;
+		}
 	}
 	
-	public void playlistloeschen() {
+	public void playlistSpeichern() {
+		
+		JPanel pNeuePlaylist = new JPanel();
+		
+		JLabel lTitel = new JLabel("Leere Playlist oder vordefiniert?");
+		String[] strAuswahl = {"Leer", "Interpret", "Album", "Genre", "Datum"};
+		JComboBox cAuswahl = new JComboBox(strAuswahl);
+		
+		pNeuePlaylist.add(lTitel);
+		pNeuePlaylist.add(cAuswahl);
+		
+		int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Neue Playlist erstellen:", JOptionPane.OK_CANCEL_OPTION);
+		if(result == JOptionPane.OK_OPTION) {
+			switch ((String)cAuswahl.getSelectedItem()) {
+			
+				case "Leer":	cplaylistadd();
+								break;
+								
+				default:		playlistSpeichernKrit((String)cAuswahl.getSelectedItem());
+								break;
+			}			
+		}	
+	}
+	
+	public void playlistSpeichernKrit(String krit) {
+		
+		int nummer = 0;
+		
+		switch (krit) {
+			case "Interpret":	nummer = 1;
+								break;
+								
+			case "Album":		nummer = 2;
+								break;
+								
+			case "Genre": 		nummer = 3;
+								break;
+								
+			case "Datum":		nummer = 4;
+								break;
+		}
+		
+		if(cplaylistadd() == 1) {
+			
+			JPanel pAddToPlaylist = new JPanel();
+		    
+			data = playlist.lesen("alleLieder");
+			
+			ArrayList<String> listKrit = new ArrayList<String>();
+			boolean inListe = false;
+			
+			listKrit.add(data[0][nummer]);
+			
+			for(int i = 0; i < data.length; i++) {
+				for(int j = 0; j < listKrit.size(); j++) {
+					if(listKrit.get(j) != null) {
+						if(listKrit.get(j).equals(data[i][nummer])) {
+							inListe = true;
+						}
+					}
+				}
+				
+				if(inListe == false) {
+					listKrit.add(data[i][nummer]);
+				}
+				else {
+					inListe = false;
+				}
+			}
+	      
+			int nr = 0;
+			JComboBox cKritListe = new JComboBox(listKrit.toArray(new String[0]));
+			
+			pAddToPlaylist.add(cKritListe);
+			
+			int result = JOptionPane.showConfirmDialog (null, pAddToPlaylist, "Auswahl des " + krit + "s :", JOptionPane.OK_CANCEL_OPTION);
+			
+			if(result == JOptionPane.OK_OPTION) {
+				for(int i = 0; i < data.length; i++) {
+					if(data[i][nummer].equals((String)cKritListe.getSelectedItem())) {  	 
+						try {
+							MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cKritListe.getSelectedItem(), i);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}	
+			}
+			
+			int selectedPlaylist = cPlaylist.getSelectedIndex();
+			
+			cPlaylist.setSelectedIndex(selectedPlaylist);
+			
+			data = playlist.lesen(cPlaylist.getSelectedItem().toString());
+			dtmAlleTitel.setDataVector(data, columnNames);
+			dtmAlleTitel.fireTableDataChanged();
+		}
+		
+	}
+	
+	public void playlistLoeschen() {
 		
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
 			JOptionPane.showMessageDialog(null, "Kann nicht gelöscht werden", "", JOptionPane.WARNING_MESSAGE);
 		}
 		else {
-			playlist.playlistLoeschen((String) cPlaylist.getSelectedItem());
+			playlist.loeschen((String) cPlaylist.getSelectedItem());
 			cPlaylist.removeItem(cPlaylist.getSelectedItem());
+			cPlaylist.setSelectedItem("alleLieder");
 		}
 	}
 	
 	public void addToPlaylist(){
 		if(cPlaylist.getSelectedItem().equals("alleLieder")) {
 			JOptionPane.showMessageDialog(null, "Playlist enthält bereits alle Titel.", "", JOptionPane.WARNING_MESSAGE);
-		} else {
-		JPanel pNeuePlaylist = new JPanel();
-
-	    JButton btnPfad = new JButton("...");
+		}
+		else {
+			JPanel pAddToPlaylist = new JPanel();
 	    
-	    data = playlist.playlistLesen("alleLieder");
-	    String[] strTitel = new String[data.length];
-	    for(int i = 0; i < data.length; i++) {
-	    	strTitel[i] = data[i][0];
-	    }
-	      
-	    int nummer = 0;
-	    JComboBox cTitelListe = new JComboBox(strTitel);
-	    pNeuePlaylist.add(cTitelListe);
-	    int result = JOptionPane.showConfirmDialog(null, pNeuePlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
-	    if (result == JOptionPane.OK_OPTION) {
-	    	for(int i = 0; i < data.length; i++) {
-	    		if(data[i][0].equals((String)cTitelListe.getSelectedItem())) {
-	    			nummer = i;
-	    		}
-	    	}
-	    	 
-	    	try {
-				MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cTitelListe.getSelectedItem(), nummer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			data = playlist.lesen("alleLieder");
+			String[] strTitel = new String[data.length];
+			
+			for(int i = 0; i < data.length; i++) {
+				strTitel[i] = data[i][0];
 			}
-	     }
-	    int selectedPlaylist = cPlaylist.getSelectedIndex();
+	      
+			int nummer = 0;
+			JComboBox cTitelListe = new JComboBox(strTitel);
 
-		cPlaylist.setSelectedIndex(selectedPlaylist);
-	    data = playlist.playlistLesen(cPlaylist.getSelectedItem().toString());
+			pAddToPlaylist.add(cTitelListe);
+			
+			int result = JOptionPane.showConfirmDialog(null, pAddToPlaylist, "Titel zur Playlist hinzufügen:", JOptionPane.OK_CANCEL_OPTION);
+			
+			if (result == JOptionPane.OK_OPTION) {
+				for(int i = 0; i < data.length; i++) {
+					if(data[i][0].equals((String)cTitelListe.getSelectedItem())) {
+						nummer = i;
+					}
+				}
+	    	 
+				try {
+					MusikPlaylist.addToPlaylist((String) cPlaylist.getSelectedItem(), (String) cTitelListe.getSelectedItem(), nummer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			int selectedPlaylist = cPlaylist.getSelectedIndex();
 
-	    dtmAlleTitel.setDataVector(data, columnNames);
-	    dtmAlleTitel.fireTableDataChanged();
+			cPlaylist.setSelectedIndex(selectedPlaylist);
+			data = playlist.lesen(cPlaylist.getSelectedItem().toString());
+
+			dtmAlleTitel.setDataVector(data, columnNames);
+			dtmAlleTitel.fireTableDataChanged();
 		}
 	}
 	
 	public String progTime(int time) {
+		
 		int progTimeSec, progTimeMin = 0;
-		String Min, Sec = "00";
+		String min, sec = "00";
 		
 		progTimeSec = time % 60;
 		progTimeMin = time / 60;
 		
 		if(progTimeSec < 10) {
-			Sec = ("0" + progTimeSec);
-		} else {
-			Sec = Integer.toString(progTimeSec);
+			sec = ("0" + progTimeSec);
+		}
+		else {
+			sec = Integer.toString(progTimeSec);
 		}
 		
 		if(progTimeMin < 10) {
-			Min = ("0" + progTimeMin);
-		} else {
-			Min = Integer.toString(progTimeMin);
+			min = ("0" + progTimeMin);
 		}
-		return (Min + "." + Sec);
+		else {
+			min = Integer.toString(progTimeMin);
+		}
+		
+		return (min + ":" + sec);
+	}
+	
+	public void openHelp() {
+		
+		if (Desktop.isDesktopSupported()) {
+		    try {
+		        File myFile = new File("hilfe.pdf");
+		        Desktop.getDesktop().open(myFile);
+		    } catch (IOException ex) {
+		    	JOptionPane.showMessageDialog(null, "Datei nicht gefunden", "", JOptionPane.WARNING_MESSAGE);
+		    }
+		}
 	}
 	
 }

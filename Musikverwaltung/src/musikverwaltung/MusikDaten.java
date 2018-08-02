@@ -6,8 +6,8 @@ import java.util.Calendar;
 import javax.swing.JOptionPane;
 
 public class MusikDaten {
-	public void MusikSpeichern(String titel, String interpret, String album, Object genre, String path) {
-		//Leider Geil,Deichkind,Befehl von ganz unten,Electronic,music/Leider Geil.wav
+	public void musikSpeichern(String titel, String interpret, String album, Object genre, String path) {
+		
 		if (titel.equals("") || interpret.equals("") || album.equals("") ||genre.equals("Auswählen...")) {
 			JOptionPane.showMessageDialog(null, "Nicht alle Felder ausgefüllt!", "", JOptionPane.WARNING_MESSAGE);
 		}
@@ -18,12 +18,14 @@ public class MusikDaten {
 				String date = new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
 				pw.append(titel + "," + interpret + "," + album + "," + genre + "," + date + "," + path + "\n");
 				pw.close();
-			} catch (FileNotFoundException e) {}
+			}
+			catch (FileNotFoundException ex) {}
 		}
 		
 	}
 
-	public void MusikLoeschen(String datenTitel) throws IOException {
+	public void musikLoeschen(String datenTitel) throws IOException {
+		
 		File inputFile = new File("playlists/alleLieder.txt");
 		File tempFile = new File("playlists/alleLiederTEMP.txt");
 		BufferedReader br = new BufferedReader(new FileReader(inputFile));
@@ -36,6 +38,7 @@ public class MusikDaten {
                 pw.flush();
             }
         }
+        
         pw.close();
         br.close();
         inputFile.delete();

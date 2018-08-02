@@ -16,42 +16,67 @@ public class MusikPlaylist {
 	
 	String playlistName;
 	
-	public void playlistSpeichern() {
+	public int speichernLeer() {
 		
-		ImageIcon icon = new ImageIcon("icons/playlist.png");
+		boolean bereitsVorhanden = false;
+		ArrayList<String> listAllePlaylists = new ArrayList<String>();
+		
+		ImageIcon icon = new ImageIcon("images/playlist.png");
 		playlistName = (String) JOptionPane.showInputDialog(null, "Name:", "Neue Playlist", JOptionPane.OK_CANCEL_OPTION, icon, null, null);
 
-		if (playlistName != null) {
+		if(playlistName != null) {
 			
-			if (playlistName.equals("")) {
+			if(playlistName.equals("")) {
 				JOptionPane.showMessageDialog(null, "Keinen Namen angegeben!", "", JOptionPane.WARNING_MESSAGE);
+				return 0;
 			}
 			else {
 				
 				File file = new File("playlists/" + playlistName + ".txt");
-				
-				try {
-					file.createNewFile();		
-				} catch (IOException e) {
-					e.printStackTrace();
+				String[] playlists = allePlaylists();
+						
+				for(int i = 0; i < playlists.length; i++) {
+					if(playlists[i].equals(playlistName)) {
+						bereitsVorhanden = true;
+					}
 				}
+				
+				if(bereitsVorhanden == false) {
+					try {
+						file.createNewFile();
+						return 1;
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+						return 0;
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Playlistname bereits vergeben!", "", JOptionPane.WARNING_MESSAGE);
+					return 0;
+				}
+				
 			}
+		}
+		else {
+			return 0;
 		}
 		
 	}
 	
-	public void playlistLoeschen(String delPlayList){
+	public void loeschen(String delPlayList){
 		
 		File inputFile = new File("playlists/" + delPlayList + ".txt");
 
-		if (inputFile.delete()) {
+		if(inputFile.delete()) {
 			JOptionPane.showMessageDialog(null, "Playlist wurde erfolgreich gelöscht", "", JOptionPane.WARNING_MESSAGE);
-		} else {
+		}
+		else {
 			JOptionPane.showMessageDialog(null, "Fehler aufgetreten, konnte nicht gelöscht werden", "", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
-	public String[][] playlistLesen(String strPlaylist) {
+	public String[][] lesen(String strPlaylist) {
 		
 		File fPlaylist = new File("playlists/" + strPlaylist + ".txt");
 		ArrayList<String> list = new ArrayList<String>();
@@ -59,9 +84,10 @@ public class MusikPlaylist {
 		try {
 			Scanner s = new Scanner(fPlaylist);
 			
-			while (s.hasNextLine()){
+			while(s.hasNextLine()){
 				list.add(s.nextLine());
 			}
+			
 			s.close();
 		}
 		catch (Exception ex) {
@@ -70,7 +96,7 @@ public class MusikPlaylist {
 			
 		String[][] data = new String[list.size()][];
 		
-		for (int i = 0; i < list.size(); i++) {
+		for(int i = 0; i < list.size(); i++) {
 		    data[i] = list.get(i).split(",");
 		}
 		
@@ -88,11 +114,11 @@ public class MusikPlaylist {
 		File folder = new File("playlists/");
 		File[] listOfFiles = folder.listFiles();
 
-		for (int i = 0; i < listOfFiles.length; i++) {
+		for(int i = 0; i < listOfFiles.length; i++) {
 			
 			iExtension = listOfFiles[i].getName().lastIndexOf('.');
 			
-            if (iExtension > 0) {
+            if(iExtension > 0) {
             	strFilename = listOfFiles[i].getName().substring(0, iExtension);
             }
             	
@@ -105,25 +131,26 @@ public class MusikPlaylist {
 	public String getnew() {
 		try {
 			return playlistName;
-		} catch( NullPointerException nullp) {
+		}
+		catch(NullPointerException ex) {
 			return "";
 		}
 	}
 	
-public static void addToPlaylist(String Playlist, String Lied, int nummer) throws IOException{
+	public static void addToPlaylist(String Playlist, String Lied, int nummer) throws IOException {
 		
 		File alleTitel = new File("playlists/alleLieder.txt");
 		BufferedReader br = new BufferedReader(new FileReader(alleTitel));
 		String Zeile = null; 
 		
 		for(int i = 1; i <= nummer + 1; i++) {
-			Zeile=br.readLine();
+			Zeile = br.readLine();
 		}
 		
 		File actualPlaylist = new File("playlists/" + Playlist + ".txt");
 
 		PrintWriter pw = new PrintWriter(new FileOutputStream(actualPlaylist,true));
-		pw.append("\n" + Zeile);
+		pw.append(Zeile + "\n");
 		pw.close();
 		
 	}
