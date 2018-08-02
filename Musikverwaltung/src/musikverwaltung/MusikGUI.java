@@ -204,6 +204,13 @@ public class MusikGUI extends JFrame {
             			abspielen();
             		}
             	}
+            	else if(evt.getButton() == 3) {
+            		try {
+						delTitel();
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					} 
+            	}
             }
         });
         
