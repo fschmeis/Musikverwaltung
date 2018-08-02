@@ -107,8 +107,7 @@ public class MusikPlayer {
 	public void musikStoppen() {
 		try {
 			audioClip.stop();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		
@@ -136,8 +135,7 @@ public class MusikPlayer {
                 	}
              
                 	audioClip.close();
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                 	ex.printStackTrace();
                 }
             }

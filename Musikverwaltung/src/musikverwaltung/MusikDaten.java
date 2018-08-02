@@ -27,8 +27,7 @@ public class MusikDaten {
 				String date = new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
 				pw.append(titel + "," + interpret + "," + album + "," + genre + "," + date + "," + path + "\n");
 				pw.close();
-			}
-			catch (FileNotFoundException ex) {}
+			} catch (FileNotFoundException ex) {}
 		}
 		
 	}
