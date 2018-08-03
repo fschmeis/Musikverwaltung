@@ -24,7 +24,6 @@ public class MusikPlaylist {
 	public int speichernLeer() {
 		
 		boolean bereitsVorhanden = false;
-		ArrayList<String> listAllePlaylists = new ArrayList<String>();
 
 		ImageIcon icon = new ImageIcon("images/playlist.png");
 		
@@ -186,7 +185,9 @@ public class MusikPlaylist {
 
 		PrintWriter pw = new PrintWriter(new FileOutputStream(actualPlaylist,true));
 		pw.append(Zeile + "\n");
+		pw.flush();
 		pw.close();
+		br.close();
 		
 	}
 }

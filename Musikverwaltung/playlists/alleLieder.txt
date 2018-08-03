@@ -1,7 +1,9 @@
-So ne Musik,Deichkind,Niveau Weshalb Warum,Electronic,01.01.2018,music/So ne Musik.wav
-Fallen Leaves,Billy Talent,Billy Talent II,Alternative,01.01.2018,music/Billy Talent - Fallen Leaves.wav
-Surrender,Billy Talent,Billy Talent II,Alternative,01.01.2018,music/Billy Talent - Surrender.wav
-Rusted From The Rain,Billy Talent,Billy Talent III,Alternative,01.01.2018,music/Billy Talent - Rusted From The Rain.wav
-The Real Slim Shady,Eminem,The Marshall Mathers LP,HipHop,01.01.2018,music/Eminem - The Real Slim Shady.wav
-Without Me,Eminem,The Eminem Show,HipHop,01.01.2018,music/Eminem - Without Me.wav
-Song from a Secret Garden,Secret Garden,Secret Garden,Klassik,01.08.2018,music/Song from a Secret Garden - Secret Garden.wav
+Leider Geil,Deichkind,Befehl von ganz unten,Electronic,01.08.2018,music/Leider Geil.wav
+So ne Musik,Deichkind,Niveau Weshalb Warum,Electronic,01.08.2018,music/So ne Musik.wav
+Fallen Leaves,Billy Talent,Billy Talent II,Alternative,01.08.2018,music/Billy Talent - Fallen Leaves.wav
+Surrender,Billy Talent,Billy Talent II,Alternative,01.08.2018,music/Billy Talent - Surrender.wav
+Rusted From The Rain,Billy Talent,Billy Talent III,Alternative,01.08.2018,music/Billy Talent - Rusted From The Rain.wav
+The Real Slim Shady,Eminem,The Marshall Mathers LP,HipHop,01.08.2018,music/Eminem - The Real Slim Shady.wav
+Without Me,Eminem,The Eminem Show,HipHop,01.08.2018,music/Eminem - Without Me.wav
+Song from a Secret Garden,Secret Garden,Secret Garden,Klassik,02.08.2018,music/Song from a Secret Garden - Secret Garden.wav
+La Campanella,Evgeny Kissin,Concert,Klassik,02.08.2018,music/La Campanella (Liszt) - Evgeny Kissin.wav

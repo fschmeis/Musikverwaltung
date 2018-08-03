@@ -192,7 +192,7 @@ public class MusikGUI extends JFrame {
 		tblPlaylist.setSelectionBackground(customBlue);
 		tblAlleTitel.setSelectionBackground(customBlue);
 		
-		//Mouse-Listener tblPlaylist - spielt das durch Doppelklick ausgewählte Lied ab
+		//Mouse-Listener tblPlaylist - spielt das durch Doppelklick ausgewählte Lied ab oder löscht den durch Rechtsklick ausgewählten Titel
         tblPlaylist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -206,11 +206,21 @@ public class MusikGUI extends JFrame {
             	}
             	else if(evt.getButton() == 3) {
             		try {
-						delTitel();
+						delTitel(cPlaylist.getSelectedItem().toString());
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					} 
             	}
+            }
+            
+            public void mouseReleased(MouseEvent evt) {
+                if (evt.getButton() == 3) {
+                    int row = tblPlaylist.rowAtPoint( evt.getPoint() );
+                    int column = tblPlaylist.columnAtPoint( evt.getPoint() );
+         
+                    if (! tblPlaylist.isRowSelected(row))
+                    	tblPlaylist.changeSelection(row, column, false, false);
+                }
             }
         });
         
@@ -220,15 +230,14 @@ public class MusikGUI extends JFrame {
             public void mouseClicked(MouseEvent evt) {
             	if(evt.getButton() == 3) {
             		try {
-						delTitel();
+						delTitel("alleTitel");
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					} 
             	}	           		
             }
             
-            public void mouseReleased(MouseEvent evt)
-            {
+            public void mouseReleased(MouseEvent evt) {
                 if (evt.getButton() == 3) {
                     int row = tblAlleTitel.rowAtPoint( evt.getPoint() );
                     int column = tblAlleTitel.columnAtPoint( evt.getPoint() );
@@ -425,6 +434,11 @@ public class MusikGUI extends JFrame {
 	    	  musikdaten.musikSpeichern(tfTitel.getText(), tfInterpret.getText(), tfAlbum.getText(), cGenreListe.getSelectedItem(), path);
 	      }
 	      
+	      //aktualisiert die Tabellen
+	      data = playlist.lesen(cPlaylist.getSelectedItem().toString());
+	      dtmPlaylist.setDataVector(data, columnNames);
+	      dtmPlaylist.fireTableDataChanged();
+	      
 	      data = playlist.lesen("alleLieder");
 	      dtmAlleTitel.setDataVector(data, columnNames);
 	      dtmAlleTitel.fireTableDataChanged();
@@ -453,26 +467,52 @@ public class MusikGUI extends JFrame {
 	 * öffnet einen Dialog, bei dessen Bestätigung 
 	 * die Funktion zum Löschen des Titels aufgerufen wird
 	 * 
+	 * @param strPlaylist
 	 * @throws IOException
 	 */
-	private void delTitel() throws IOException {
+	private void delTitel(String strPlaylist) throws IOException {
 		
-		int row = tblAlleTitel.getSelectedRow();
-		String datenTitel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
+		String datenTitel = "";
+		String titel = "";
+		String kuenstler = "";
 		
-		for (int column = 1; column<tblAlleTitel.getColumnCount(); column++) {
-			datenTitel = datenTitel + "," + tblAlleTitel.getModel().getValueAt(row, column).toString();
+		if(strPlaylist.equals("alleTitel")) {
+			int row = tblAlleTitel.getSelectedRow();
+			datenTitel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
+			
+			for (int column = 1; column<tblAlleTitel.getColumnCount(); column++) {
+				datenTitel = datenTitel + "," + tblAlleTitel.getModel().getValueAt(row, column).toString();
+			}
+			
+			titel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
+			kuenstler = tblAlleTitel.getModel().getValueAt(row, 1).toString();
+		}
+		else {
+			
+			if(strPlaylist.equals("alleLieder")) {
+				JOptionPane.showMessageDialog(null, "Aus dieser Playlist kann kein Lied gelöscht werden!", "", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			else {
+				int row = tblPlaylist.getSelectedRow();
+				datenTitel = tblPlaylist.getModel().getValueAt(row, 0).toString();
+				
+				for (int column = 1; column<tblPlaylist.getColumnCount(); column++) {
+					datenTitel = datenTitel + "," + tblPlaylist.getModel().getValueAt(row, column).toString();
+				}
+				
+				titel = tblPlaylist.getModel().getValueAt(row, 0).toString();
+				kuenstler = tblPlaylist.getModel().getValueAt(row, 1).toString();
+			}
+			
 		}
 		
-		String titel = tblAlleTitel.getModel().getValueAt(row, 0).toString();
-		String kuenstler = tblAlleTitel.getModel().getValueAt(row, 1).toString();
 		
 		ImageIcon icon = new ImageIcon("images/speaker.png");
-		int result = JOptionPane.showConfirmDialog(new JPanel(), titel + " von " + kuenstler, "Titel löschen?",
-				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
+		int result = JOptionPane.showConfirmDialog(new JPanel(), titel + " von " + kuenstler, "Titel löschen?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
 		
 		if(result == 0) {
-			musikdaten.musikLoeschen(datenTitel);
+			musikdaten.musikLoeschen(datenTitel, strPlaylist);
 			JOptionPane.showMessageDialog(new JPanel(), titel + " von " + kuenstler + " gelöscht.", "Titel gelöscht", JOptionPane.PLAIN_MESSAGE, icon);
 		}
 		
@@ -901,7 +941,7 @@ public class MusikGUI extends JFrame {
 		
 		if (Desktop.isDesktopSupported()) {
 		    try {
-		        File file = new File("anleitung.pdf");
+		        File file = new File("Anleitung.pdf");
 		        
 		        if(file.exists()) {
 		        	Desktop.getDesktop().open(file);

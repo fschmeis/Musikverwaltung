@@ -35,16 +35,43 @@ public class MusikDaten {
 	}
 	
 	/**
-	 * löscht das durch Rechtsklick ausgewählte Lied aus den Playlisten
+	 * löscht das durch Rechtsklick ausgewählte Lied
+	 * aus allen Playlisten oder einer gewählten Playlist
 	 * 
 	 * @param datenTitel
+	 * @param strPlaylist
 	 * @throws IOException
 	 */
-	public void musikLoeschen(String datenTitel) throws IOException {
+	public void musikLoeschen(String datenTitel, String strPlaylist) throws IOException {
 		
-		for (int i=0; i<playlist.allePlaylists().length; i++) {
-			File inputFile = new File("playlists/" + playlist.allePlaylists()[i] + ".txt");
-			File tempFile = new File("playlists/" + playlist.allePlaylists()[i] + "TEMP.txt");
+		if(strPlaylist == "alleTitel") {
+	        File folder = new File("playlists/");
+	        File[] listOfFiles = folder.listFiles();
+	        
+	        for(int i = 0; i < listOfFiles.length; i++) {
+	            System.out.println();
+	            File inputFile = new File("playlists/" + listOfFiles[i].getName());
+	            File tempFile = new File("playlists/TEMP" + listOfFiles[i].getName());
+	            BufferedReader br = new BufferedReader(new FileReader(inputFile));
+	            PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+	            String line = null;
+
+	            while ((line = br.readLine()) != null) {
+	                if (!line.trim().equals(datenTitel)) {
+	                    pw.println(line);
+	                    pw.flush();
+	                }
+	            }
+
+	            pw.close();
+	            br.close();
+	            inputFile.delete();
+	            tempFile.renameTo(inputFile);
+	        }
+		}
+		else {
+			File inputFile = new File("playlists/" + strPlaylist + ".txt");
+			File tempFile = new File("playlists/" + strPlaylist + "TEMP.txt");
 			BufferedReader br = new BufferedReader(new FileReader(inputFile));
 	        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
 	        String line = null;
